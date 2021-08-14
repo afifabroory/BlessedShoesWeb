@@ -1,11 +1,6 @@
 "use strict";
 
 import {
-    isValidInput,
-    isValidRD
-} from "./validation";
-import "./database";
-import {
     read,
     insert,
     update,
@@ -40,11 +35,19 @@ function showData(data) {
     }
 }
 
+function isValidRD(rdInput) {
+    for (var i = 0; i < rdInput.length; ++i) {
+        if (rdInput[i].checked == true) {
+            return true;
+        }
+    }
+    return false;
+}
+
 inputBtn.addEventListener("click", () => {
+    const    input = inputID.value;
 
-    var input = inputID.value;
-
-    if (isValidInput(input) && isValidRD(rdBtn)) {
+    if ((input.length > 0) && isValidRD(rdBtn)) {
         if (rdBtn[0].checked) {
             const response = read(input);
             response.then((data) => {

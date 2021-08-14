@@ -1,10 +1,37 @@
 const path = require('path');
+//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
-    entry: './src/index.js',
-    mode: 'production', // Test purposes
+    entry: {
+        main: {
+          import: './src/user.js',
+          dependOn: 'database'
+        },
+        admin: {
+            import:'./src/admin.js',
+            dependOn: 'database'
+        },
+        database: {
+            import: './src/database.js',
+            dependOn: 'sharedApp'
+        },
+        login: {
+          import: './src/login.js',
+          dependOn: 'sharedApp'
+        },
+        sharedApp: 'firebase/app',
+    },
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+      },
+    },
+    mode: 'production', 
     output: {
-        filename: 'main.js',
+        filename: './script/[name].js',
         path: path.resolve(__dirname, 'public')
-    }
+    }/*,
+    plugins: [
+      new BundleAnalyzerPlugin()
+    ]*/
 }

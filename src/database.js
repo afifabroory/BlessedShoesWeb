@@ -1,14 +1,22 @@
-import {
-    db,
-    serverValue
-} from "./firebaseInit";
+import firebase from "firebase/app";
 
+firebase.initializeApp({
+    apiKey: "AIzaSyA4-PsDCaElqrk9i6CYpTglUtW5m6-7cVA",
+    authDomain: "test-955e0.firebaseapp.com",
+    databaseURL: "https://test-955e0-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "test-955e0",
+    appId: "1:942278511213:web:64865f6a05762a805c8d64",
+    measurementId: "G-50B8KY0NX9"
+});
+
+/////////////////////////////////// DATABASE ///////////////////////////////////
+import "firebase/database";
+
+firebase.database().useEmulator("localhost", 9000); // Development Purposes 
 
 // Admin & User
-export function read(id) {
-    const idRef = db.ref(id);
-
-    const data = idRef.once("value").then((dataSnapshot) => {
+function read(id) {
+    return firebase.database().ref(id).once("value").then((dataSnapshot) => {
         if (dataSnapshot.exists()) {
             console.log(dataSnapshot.val());
             return dataSnapshot.val();
@@ -18,19 +26,16 @@ export function read(id) {
     }).catch(() => {
         console.log("Something wrong!");
     });
-
-    return data;
 }
 
 /** 
  * Admin only 
  */
-export function insert(id, data) {
+function insert(id, data) {
     
     const dtArr = [];
     var dt;
     
-    console.log(serverValue.TIMESTAMP);
     for (var i = 0; i < data.length; ++i) {
         dt = data[i];
         dtArr.push({
@@ -39,21 +44,24 @@ export function insert(id, data) {
             "Service"   : dt.service,
             "Size"      : dt.size,
             "Status"    : dt.status,
-            "TimestampIn" : serverValue.TIMESTAMP,
+            "TimestampIn" : firebase.database.ServerValue.TIMESTAMP,
             "TimestampOut": "-"
         });
     }
 
-    db.ref(id).set(dtArr).then(() => {
+    firebase.database().ref(id).set(dtArr).then(() => {
         console.log("Success");
     }).catch(() => {
         console.log("Something wrong!");
     });
 }
 
-export function update(id, data) {
-    db.ref(id).update(data);
+function update(id, data) {
+    firebase.database().ref(id).update(data);
 }
-export function remove(id) {
-    db.ref(id).remove();
+
+function remove(id) {
+    firebase.database().ref(id).remove();
 }
+
+export {read, update, insert, remove };
