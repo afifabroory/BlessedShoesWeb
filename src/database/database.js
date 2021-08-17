@@ -1,4 +1,6 @@
 import firebase from "firebase/app";
+import "firebase/database";
+import { storeData } from "./local_database"
 
 firebase.initializeApp({
     apiKey: "AIzaSyA4-PsDCaElqrk9i6CYpTglUtW5m6-7cVA",
@@ -9,16 +11,12 @@ firebase.initializeApp({
     measurementId: "G-50B8KY0NX9"
 });
 
-/////////////////////////////////// DATABASE ///////////////////////////////////
-import "firebase/database";
-
 firebase.database().useEmulator("localhost", 9000); // Development Purposes 
 
 // Admin & User
-function read(id) {
-    return firebase.database().ref(id).once("value").then((dataSnapshot) => {
+function read(id, eventType="value") {
+    return firebase.database().ref(id).once(eventType).then((dataSnapshot) => {
         if (dataSnapshot.exists()) {
-            console.log(dataSnapshot.val());
             return dataSnapshot.val();
         } else {
             return false;
@@ -39,7 +37,6 @@ function insert(id, data) {
     for (var i = 0; i < data.length; ++i) {
         dt = data[i];
         dtArr.push({
-            "No"        : (i+1),
             "ShoesBrand": dt.brand,
             "Service"   : dt.service,
             "Size"      : dt.size,
@@ -64,4 +61,12 @@ function remove(id) {
     firebase.database().ref(id).remove();
 }
 
-export {read, update, insert, remove };
+function init_dbChange() {
+    firebase.database().ref("/").on('child_changed', function(childSnapshot) {
+        storeData(childSnapshot.key, JSON.stringify(childSnapshot.val()));
+    });
+}
+
+init_dbChange();
+
+export {read, update, insert, remove, init_dbChange};

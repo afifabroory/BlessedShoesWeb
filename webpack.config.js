@@ -4,19 +4,19 @@ const path = require('path');
 module.exports = {
     entry: {
         main: {
-          import: './src/user.js',
+          import: './src/user/user.js',
           dependOn: 'database'
         },
         admin: {
-            import:'./src/admin.js',
+            import:'./src/admin/admin.js',
             dependOn: 'database'
         },
         database: {
-            import: './src/database.js',
+            import: './src/database/database.js',
             dependOn: 'sharedApp'
         },
         login: {
-          import: './src/login.js',
+          import: './src/login/login.js',
           dependOn: 'sharedApp'
         },
         sharedApp: 'firebase/app',

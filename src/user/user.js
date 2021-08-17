@@ -5,7 +5,7 @@ import {
     insert,
     update,
     remove
-} from "./database";
+} from "../database/database";
 
 const dataResponse = document.querySelectorAll("div.response>p");
 const rdBtn = document.getElementsByName("option");
