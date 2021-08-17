@@ -55,8 +55,8 @@ inputBtn.addEventListener("click", () => {
             });
         } else if (rdBtn[1].checked) {
             var data = [
-                {"brand": "Nike", "service": "Deepclean", "size": "47", "status": "On Process"},
-                {"brand": "Puma", "service": "FastClean", "size": "67", "status": "Done"}
+                {"brand": "Nike", "service": "Deep Clean", "size": "47", "status": "In Progress"},
+                {"brand": "Puma", "service": "Fast Clean", "size": "67", "status": "Done"}
             ]
             insert(input,data);
         } else if (rdBtn[2].checked) {

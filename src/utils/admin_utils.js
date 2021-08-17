@@ -86,10 +86,28 @@ function createSelectEl(vals, valID, labelText, parent, isLast=true, func=null, 
   setBreakAttr(parent); // TODO
 }
 
+function createOptionEl(parent, dataLength, isReset=false, custMsg="- ENTER ID FIRST -") {  
+  var elementLen = parent.childNodes.length;
+  for (var i = 0; i < elementLen; ++i) {
+    parent.removeChild(parent.childNodes[0]);
+  }
+
+  for (var i = 0; i < dataLength; ++i) {
+    var option = document.createElement("option");
+    option.setAttribute("value", i);
+
+    if (!isReset) option.innerHTML = (i+1);
+    else option.innerHTML = custMsg;
+
+    parent.append(option);
+  }
+}
+
 export {
     createInputEl, 
     createSelectEl,
     createCheckEl,
+    createOptionEl,
     createDivEl,
     createBtnEl
 }

@@ -7,6 +7,10 @@ import {
 } from "../database/database";
 
 import {
+  storeData
+} from "../database/local_database"
+
+import {
   createInputEl, 
   createSelectEl,
   createCheckEl,
@@ -20,8 +24,12 @@ import {
   delete_attrs
 } from './admin_const'
 
+import {
+  init_idChange,
+  init_noChange
+} from './admin_listiner'
+
 var dbOpState;
-var storage = window.sessionStorage;
 const insertBefore = (parent, newEl, el) => parent.insertBefore(newEl, el);
 
 function initOperationListener() {
@@ -55,7 +63,7 @@ function defaultAdmin(init=true) {
       const response = read("/");
       response.then((data) => {
         for (var child in data) {
-          storage.setItem(child, JSON.stringify(data[child]));
+          storeData(child, JSON.stringify(data[child]));
         }
       })
     } 
@@ -124,6 +132,9 @@ function updateAdmin() {
   for (var key in update_attrs[2]) {
     createBtnEl(update_attrs[2][key][0], update_attrs[2][key][1], update_attrs[2][key][2], btnParent);
   }
+
+  init_idChange();
+  init_noChange();
 }
 
 function deleteAdmin() {
@@ -143,9 +154,10 @@ function deleteAdmin() {
   document.querySelector("#shoesBrand").disabled = true;
   document.querySelector("#shoesSize").disabled = true;
 
-  var parent = document.querySelector("#input");
-  const beforeEl = document.querySelector("#div-shoesBrand");
-  
+  175
+  init_idChange();
+176
+  init_noChange();
   for (var key in delete_attrs[2]) {
     createInputEl(delete_attrs[2][key][0], delete_attrs[2][key][1], delete_attrs[2][key][2], parent);
   }
@@ -160,6 +172,9 @@ function deleteAdmin() {
   for (var key in delete_attrs[3]) {
     createBtnEl(delete_attrs[3][key][0], delete_attrs[3][key][1], delete_attrs[3][key][2], btnParent);
   }
+
+  init_idChange();
+  init_noChange();
 }
 
 export { defaultAdmin }

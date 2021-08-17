@@ -7,7 +7,8 @@ const default_attrs = [{
     type: "text",
     autocomplete: "off",
     pattern: "\\d*",
-    title: "NUMBER ONLY!"
+    title: "NUMBER ONLY!",
+    placeholder: "Enter Transaction ID"
 }, {
     sheoesNo: [{
         id: "shoesNo",
@@ -28,10 +29,10 @@ const default_attrs = [{
 }, {
     service: [{
         "Deep Clean": "Deep Clean",
-        "Fast clean": "Fast clean",
-        "Whitening treatment": "Whitening treatment",
+        "Fast Clean": "Fast clean",
+        "Whitening Treatment": "Whitening Treatment",
         Repaint: "Repaint",
-        Regluer: "Regluer"
+        Reglue: "Reglue"
     }, "shoesService", "Service: "],
     status: [{
         "In Progress": "In Progress",
@@ -80,7 +81,24 @@ const delete_attrs = [{
     }, "DELETE", 1]
 }];
 
+const service_option_index = {
+    "Deep Clean": 0,
+    "Fast Clean": 1,
+    "Whitening treatment": 2,
+    Repaint: 3,
+    Regluer: 4
+}
+
+const status_option_index = {
+    "In Progress": 0,
+    Done: 1,
+    Canceled: 2
+}
+
 export { 
     default_attrs, 
     update_attrs,
-    delete_attrs }
+    delete_attrs,
+    service_option_index,
+    status_option_index
+}

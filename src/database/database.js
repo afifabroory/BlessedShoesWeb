@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/database";
-import { storeData } from "./local_database"
+import { storeData, removeData } from "./local_database"
 
 firebase.initializeApp({
     apiKey: "AIzaSyA4-PsDCaElqrk9i6CYpTglUtW5m6-7cVA",
@@ -13,7 +13,7 @@ firebase.initializeApp({
 
 firebase.database().useEmulator("localhost", 9000); // Development Purposes 
 
-// Admin & User
+// User
 function read(id, eventType="value") {
     return firebase.database().ref(id).once(eventType).then((dataSnapshot) => {
         if (dataSnapshot.exists()) {
@@ -61,12 +61,20 @@ function remove(id) {
     firebase.database().ref(id).remove();
 }
 
-function init_dbChange() {
+function init_listner() {
     firebase.database().ref("/").on('child_changed', function(childSnapshot) {
         storeData(childSnapshot.key, JSON.stringify(childSnapshot.val()));
     });
+
+    firebase.database().ref("/").on('child_added', function(childSnapshot) {
+        storeData(childSnapshot.key, JSON.stringify(childSnapshot.val()));
+    });
+
+    firebase.database().ref("/").on('child_removed', function(childSnapshot) {
+        removeData(childSnapshot.key);
+    });
 }
 
-init_dbChange();
+init_listner();
 
-export {read, update, insert, remove, init_dbChange};
+export {read, update, insert, remove};
