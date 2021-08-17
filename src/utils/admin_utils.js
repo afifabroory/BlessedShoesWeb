@@ -63,11 +63,12 @@ function createCheckEl(elAttr, labelText, disable, parent, isLast=true, func=nul
   }
 }
 
-function createSelectEl(vals, valID, labelText, parent, isLast=true, func=null, el=null) {
+function createSelectEl(vals, valID, labelText, parent, isLast=true, func=null, el=null, disabled=false) {
   parent = createDivEl(valID, parent, isLast, el, func);
 
   var select = document.createElement("select");
   select.setAttribute("id", valID);
+  select.disabled = disabled;
   
   var label = document.createElement("label");
   label.setAttribute("for", valID);

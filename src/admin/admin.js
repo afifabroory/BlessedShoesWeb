@@ -29,6 +29,8 @@ import {
   init_noChange
 } from './admin_listiner'
 
+import { showUpdate, showDelete } from "../utils/admin_data"
+
 var dbOpState;
 const insertBefore = (parent, newEl, el) => parent.insertBefore(newEl, el);
 
@@ -133,12 +135,13 @@ function updateAdmin() {
     createBtnEl(update_attrs[2][key][0], update_attrs[2][key][1], update_attrs[2][key][2], btnParent);
   }
 
-  init_idChange();
-  init_noChange();
+  init_idChange(showUpdate);
+  init_noChange(showUpdate);
 }
 
 function deleteAdmin() {
   var selectState = document.querySelector("#dbOp").selectedIndex;
+
   document.querySelector("#input").remove();
   defaultAdmin(false);
   document.querySelector("#dbOp").getElementsByTagName("option")[selectState].selected = "selected";
@@ -154,27 +157,28 @@ function deleteAdmin() {
   document.querySelector("#shoesBrand").disabled = true;
   document.querySelector("#shoesSize").disabled = true;
 
-  175
-  init_idChange();
-176
-  init_noChange();
+  var parent = document.querySelector("#input");
+
   for (var key in delete_attrs[2]) {
     createInputEl(delete_attrs[2][key][0], delete_attrs[2][key][1], delete_attrs[2][key][2], parent);
   }
 
+  const beforeEl = document.querySelector("#div-shoesBrand");
+
   createSelectEl(
     delete_attrs[0], "shoesNo", "No: ", 
-    parent, false, insertBefore, beforeEl
+    parent, false, insertBefore, beforeEl, true
   )
-  createCheckEl(delete_attrs[1], "Delete All", false, parent)
+  createCheckEl(delete_attrs[1], "Delete All", true, parent)
 
   var btnParent = createDivEl("Btn", parent);
   for (var key in delete_attrs[3]) {
     createBtnEl(delete_attrs[3][key][0], delete_attrs[3][key][1], delete_attrs[3][key][2], btnParent);
   }
 
-  init_idChange();
-  init_noChange();
+   // If data by ID found, then toggle disabled input else do nothing.
+  init_idChange(showDelete)
+  init_noChange(showDelete);
 }
 
 export { defaultAdmin }

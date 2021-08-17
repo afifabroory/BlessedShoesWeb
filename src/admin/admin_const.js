@@ -7,8 +7,7 @@ const default_attrs = [{
     type: "text",
     autocomplete: "off",
     pattern: "\\d*",
-    title: "NUMBER ONLY!",
-    placeholder: "Enter Transaction ID"
+    title: "NUMBER ONLY!"
 }, {
     sheoesNo: [{
         id: "shoesNo",
@@ -63,7 +62,7 @@ const delete_attrs = [{
     0: "- ENTER ID FIRST -"
 }, {
     id: "deleteAllCheck",
-    type: "checkbox"
+    type: "checkbox",
 }, {
     shoesService: [{
         id: "shoesService",
