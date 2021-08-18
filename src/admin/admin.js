@@ -116,20 +116,22 @@ function updateAdmin() {
 
   document.querySelector("#div-shoesNo").remove();
   document.querySelector("#div-Btn").remove();
-  
+
   document.querySelector("#shoesID").disabled = false;
-  document.querySelector("#shoesBrand").disabled = false;
-  document.querySelector("#shoesSize").disabled = false;
+  document.querySelector("#shoesBrand").disabled = true;
+  document.querySelector("#shoesSize").disabled = true;
+  document.querySelector("#div-shoesService>#shoesService").disabled = true;
+  document.querySelector("#div-shoesStatus>#shoesStatus").disabled = true;
   
   var parent = document.querySelector("#input");
   const beforeEl = document.querySelector("#div-shoesBrand");
 
   createSelectEl(
    update_attrs[0], "shoesNo", "No: ", 
-    parent, false, insertBefore, beforeEl
+    parent, false, insertBefore, beforeEl, true
   )
 
-  createCheckEl(update_attrs[1], "Change Status To All", false, parent)
+  createCheckEl(update_attrs[1], "Change Status To All", true, parent)
   var btnParent = createDivEl("Btn", parent);
   for (var key in update_attrs[2]) {
     createBtnEl(update_attrs[2][key][0], update_attrs[2][key][1], update_attrs[2][key][2], btnParent);
