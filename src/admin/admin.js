@@ -29,7 +29,7 @@ import {
   init_noChange
 } from './admin_listiner'
 
-import { showUpdate, showDelete } from "../utils/admin_data"
+import { showUpdate, showDelete, update_state_listener } from "../utils/admin_data"
 
 var dbOpState;
 const insertBefore = (parent, newEl, el) => parent.insertBefore(newEl, el);
@@ -139,6 +139,7 @@ function updateAdmin() {
 
   init_idChange(showUpdate);
   init_noChange(showUpdate);
+  update_state_listener();
 }
 
 function deleteAdmin() {

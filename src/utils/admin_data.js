@@ -28,14 +28,20 @@ function toggle_update() {
 
     var shoesStatus = document.querySelector("#div-shoesStatus>#shoesStatus");
     shoesStatus.disabled = !shoesStatus.disabled;   
-
-    var updateStatus = document.querySelector("#div-updateStatus>#updateStatus");
-    updateStatus.disabled = !updateStatus.disabled;
-
-    var btn = document.querySelector("#div-Btn>#updateBtn");
-    btn.disabled = !btn.disabled;   
 }
 
+function toggle_update_btn(isChangeState) {
+    var updateStatus = document.querySelector("#div-updateStatus>#updateStatus");
+    var btn = document.querySelector("#div-Btn>#updateBtn");
+
+    if (isChangeState) {
+        updateStatus.disabled = false;
+        btn.disabled = false;
+    } else {
+        updateStatus.disabled = true;
+        btn.disabled = true;
+    }
+}
 
 function showUpdate(key, isId=true) {
     var data = getData(key);
@@ -65,6 +71,7 @@ function showUpdate(key, isId=true) {
         clearUpdate();
         if (state) toggle_update();
     }
+    toggle_update_btn(false);
 }
 
 function clearUpdate() {
@@ -107,4 +114,52 @@ function clearDelete() {
     document.querySelector("#div-shoesStatus>#shoesStatus").value = "";
 }
 
-export { showUpdate, showDelete }
+var key;
+var index;
+var data;
+function helperProcedure() {
+    key = document.querySelector("#div-shoesID>#shoesID").value;
+    index = document.querySelector("#div-shoesNo>#shoesNo").selectedIndex;
+    data = getData(key);
+}
+
+function update_state_listener() {
+
+    document.querySelector("#div-shoesBrand>#shoesBrand").addEventListener("input", () => {
+        var shoesBrand = document.querySelector("#shoesBrand");
+        helperProcedure();
+
+        var shoesBrandState = shoesBrand.value !== data[index].ShoesBrand;
+
+        toggle_update_btn(shoesBrandState);
+    });
+
+    document.querySelector("#div-shoesSize>#shoesSize").addEventListener("input", () => {
+        var shoesSize = document.querySelector("#shoesSize");
+        helperProcedure();
+
+        var shoesSizeState = shoesSize.value !== data[index].Size;
+        
+        toggle_update_btn(shoesSizeState);
+    });
+
+    document.querySelector("#div-shoesService>#shoesService").addEventListener("input", () => {
+        var shoesService = document.querySelector("#div-shoesService>#shoesService");
+        helperProcedure();
+
+        var shoesServiceState = shoesService.value !== data[index].Service;
+        
+        toggle_update_btn(shoesServiceState);
+    });
+
+    document.querySelector("#div-shoesStatus>#shoesStatus").addEventListener("input", () => {
+        var shoesStatus = document.querySelector("#div-shoesStatus>#shoesStatus");
+        helperProcedure();
+
+        var shoesStatusState = shoesStatus.value !== data[index].Status;
+        
+        toggle_update_btn(shoesStatusState);
+    });
+}
+
+export { showUpdate, showDelete, update_state_listener }
