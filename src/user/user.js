@@ -51,6 +51,7 @@ inputBtn.addEventListener("click", () => {
         if (rdBtn[0].checked) {
             const response = read(input);
             response.then((data) => {
+                console.log(data);
                 showData(data);
             });
         } else if (rdBtn[1].checked) {

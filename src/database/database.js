@@ -15,7 +15,7 @@ firebase.database().useEmulator("localhost", 9000); // Development Purposes
 
 // User
 function read(id, eventType="value") {
-    return firebase.database().ref(id).once(eventType).then((dataSnapshot) => {
+    var data =  firebase.database().ref(id).once(eventType).then((dataSnapshot) => {
         if (dataSnapshot.exists()) {
             return dataSnapshot.val();
         } else {
@@ -24,6 +24,9 @@ function read(id, eventType="value") {
     }).catch(() => {
         console.log("Something wrong!");
     });
+
+    firebase.database().goOffline();
+    return data;
 }
 
 /** 

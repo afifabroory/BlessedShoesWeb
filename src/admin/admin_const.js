@@ -5,9 +5,7 @@ const default_attrs = [{
 }, {
     id: "shoesID",
     type: "text",
-    autocomplete: "off",
-    pattern: "\\d*",
-    title: "NUMBER ONLY!"
+    autocomplete: "off"
 }, {
     sheoesNo: [{
         id: "shoesNo",
@@ -23,7 +21,9 @@ const default_attrs = [{
     shoesSize: [{
         id: "shoesSize",
         type: "text",
-        autocomplete: "off"
+        autocomplete: "off",
+        pattern: "\\d*",
+        maxlength: "3"
     }, "Shoes Size: ", !1]
 }, {
     service: [{

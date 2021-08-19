@@ -2,11 +2,11 @@ import {
   read,
   insert,
   update,
-  remove,
-  init_dbChange
+  remove
 } from "../database/database";
 
 import {
+  getData,
   storeData
 } from "../database/local_database"
 
@@ -29,10 +29,19 @@ import {
   init_noChange
 } from './admin_listiner'
 
-import { showUpdate, showDelete, update_state_listener } from "../utils/admin_data"
+import { showUpdate, showDelete, update_state_listener, insert_state_listener } from "../utils/admin_data"
 
 var dbOpState;
 const insertBefore = (parent, newEl, el) => parent.insertBefore(newEl, el);
+
+function randomID(length=3) {
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  var result = '';
+
+  for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+
+  return result;
+}
 
 function initOperationListener() {
   document.querySelector("#dbOp").addEventListener("change", () => {
@@ -43,6 +52,7 @@ function initOperationListener() {
         case 0:
           document.querySelector("div").remove();
           defaultAdmin(false);
+          insert_state_listener();
           break;
         case 1:
           updateAdmin();
@@ -60,15 +70,6 @@ function initOperationListener() {
 // This function add new element if user signed
 function defaultAdmin(init=true) {
   if (init) {
-    if (window.sessionStorage.length === 0) {
-      console.log("length 0");
-      const response = read("/");
-      response.then((data) => {
-        for (var child in data) {
-          storeData(child, JSON.stringify(data[child]));
-        }
-      })
-    } 
     document.querySelector("#admin_login").remove();
     
     var dataDiv = document.createElement("div");
@@ -80,6 +81,15 @@ function defaultAdmin(init=true) {
     document.body.prepend(dataDiv);
     document.body.prepend(hrDiv);
   }
+
+  if (window.sessionStorage.length === 0) {
+    const response = read("/");
+    response.then((data) => {
+      for (var child in data) {
+        storeData(child, JSON.stringify(data[child]));
+      }
+    })
+  } 
 
   var parent = document.createElement("div");
   parent.setAttribute("id", "input");
@@ -103,6 +113,14 @@ function defaultAdmin(init=true) {
     createBtnEl(default_attrs[4][key][0], default_attrs[4][key][1], default_attrs[4][key][2], btnParent);
   }
 
+  var alphaNumeric_ID = getData("id");
+  if (alphaNumeric_ID) {
+    document.querySelector("#div-shoesID>#shoesID").value = alphaNumeric_ID;
+  } else {
+    storeData("id", JSON.stringify(randomID()));
+    document.querySelector("#div-shoesID>#shoesID").value = getData("id");
+  }
+
   initOperationListener();
 }
 
@@ -112,7 +130,7 @@ function updateAdmin() {
   defaultAdmin(false);
   document.querySelector("#dbOp").getElementsByTagName("option")[selectState].selected = "selected";
 
-  document.querySelector("#div-shoesID>#shoesID").removeAttribute("value");
+  document.querySelector("#div-shoesID>#shoesID").value = "";
 
   document.querySelector("#div-shoesNo").remove();
   document.querySelector("#div-Btn").remove();
@@ -149,7 +167,7 @@ function deleteAdmin() {
   defaultAdmin(false);
   document.querySelector("#dbOp").getElementsByTagName("option")[selectState].selected = "selected";
 
-  document.querySelector("#div-shoesID>#shoesID").removeAttribute("value");
+  document.querySelector("#div-shoesID>#shoesID").value = ""
 
   document.querySelector("#div-Btn").remove();
   document.querySelector("#div-shoesService").remove();
@@ -172,7 +190,7 @@ function deleteAdmin() {
     delete_attrs[0], "shoesNo", "No: ", 
     parent, false, insertBefore, beforeEl, true
   )
-  createCheckEl(delete_attrs[1], "Delete All", true, parent)
+  createCheckEl(delete_attrs[1], "Delete This Transaction", true, parent)
 
   var btnParent = createDivEl("Btn", parent);
   for (var key in delete_attrs[3]) {

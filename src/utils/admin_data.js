@@ -1,6 +1,7 @@
 import { getData } from "../database/local_database"
 import { createOptionEl } from "./admin_utils"
 import { service_option_index, status_option_index } from "../admin/admin_const"
+import { is_intOnly } from "../utils/validate"
 
 function toggle_delete() {
     var shoesNo = document.querySelector("#div-shoesNo>#shoesNo");
@@ -30,7 +31,7 @@ function toggle_update() {
     shoesStatus.disabled = !shoesStatus.disabled;   
 }
 
-function toggle_update_btn(isChangeState) {
+function updateBtn_disabled(isChangeState) {
     var updateStatus = document.querySelector("#div-updateStatus>#updateStatus");
     var btn = document.querySelector("#div-Btn>#updateBtn");
 
@@ -41,6 +42,13 @@ function toggle_update_btn(isChangeState) {
         updateStatus.disabled = true;
         btn.disabled = true;
     }
+}
+
+function insertBtn_disabled(state) {
+    var btn = document.querySelector("#div-Btn");
+
+    btn.children[0].disabled = state;
+    btn.children[1].disabled = state;
 }
 
 function showUpdate(key, isId=true) {
@@ -71,7 +79,7 @@ function showUpdate(key, isId=true) {
         clearUpdate();
         if (state) toggle_update();
     }
-    toggle_update_btn(false);
+    updateBtn_disabled(false);
 }
 
 function clearUpdate() {
@@ -123,6 +131,41 @@ function helperProcedure() {
     data = getData(key);
 }
 
+function insert_state_listener() {
+    document.querySelector("#div-shoesBrand>#shoesBrand").addEventListener("input", () => {
+        var shoesSize = document.querySelector("#div-shoesSize>#shoesSize").value
+        var shoesBrand = document.querySelector("#div-shoesBrand>#shoesBrand").value
+
+        if ((shoesSize.length > 0) && (shoesBrand.length > 0)) {
+            insertBtn_disabled(false);
+        } else {
+            insertBtn_disabled(true);
+        }
+    });
+
+    document.querySelector("#div-shoesSize>#shoesSize").addEventListener("input", () => {
+        var shoesSize = document.querySelector("#div-shoesSize>#shoesSize").value
+        var shoesBrand = document.querySelector("#div-shoesBrand>#shoesBrand").value
+        
+        var tmp = "";
+        for (var i = 0; i < 3; ++i) {    
+            if (is_intOnly(shoesSize.slice(i,i+1))) {
+                tmp += shoesSize.slice(i,i+1);
+            }
+        }
+
+        // Update content
+        document.querySelector("#div-shoesSize>#shoesSize").value = tmp;
+        shoesSize = document.querySelector("#div-shoesSize>#shoesSize").value
+        shoesBrand = document.querySelector("#div-shoesBrand>#shoesBrand").value
+        if ((shoesSize.length > 0) && (shoesBrand.length > 0)) {
+            insertBtn_disabled(false);
+        } else {
+            insertBtn_disabled(true);
+        }
+    });
+}
+
 function update_state_listener() {
 
     document.querySelector("#div-shoesBrand>#shoesBrand").addEventListener("input", () => {
@@ -131,16 +174,24 @@ function update_state_listener() {
 
         var shoesBrandState = shoesBrand.value !== data[index].ShoesBrand;
 
-        toggle_update_btn(shoesBrandState);
+        updateBtn_disabled(shoesBrandState);
     });
 
     document.querySelector("#div-shoesSize>#shoesSize").addEventListener("input", () => {
         var shoesSize = document.querySelector("#shoesSize");
         helperProcedure();
 
-        var shoesSizeState = shoesSize.value !== data[index].Size;
+        var tmp = "";
+        for (var i = 0; i < 3; ++i) {    
+            if (is_intOnly(shoesSize.slice(i,i+1))) {
+                tmp += shoesSize.slice(i,i+1);
+            }
+        }
         
-        toggle_update_btn(shoesSizeState);
+        document.querySelector("#div-shoesSize>#shoesSize").value = tmp;    // Update content
+
+        var shoesSizeState = tmp !== data[index].Size;
+        updateBtn_disabled(shoesSizeState);
     });
 
     document.querySelector("#div-shoesService>#shoesService").addEventListener("input", () => {
@@ -149,7 +200,7 @@ function update_state_listener() {
 
         var shoesServiceState = shoesService.value !== data[index].Service;
         
-        toggle_update_btn(shoesServiceState);
+        updateBtn_disabled(shoesServiceState);
     });
 
     document.querySelector("#div-shoesStatus>#shoesStatus").addEventListener("input", () => {
@@ -158,8 +209,8 @@ function update_state_listener() {
 
         var shoesStatusState = shoesStatus.value !== data[index].Status;
         
-        toggle_update_btn(shoesStatusState);
+        updateBtn_disabled(shoesStatusState);
     });
 }
 
-export { showUpdate, showDelete, update_state_listener }
+export { showUpdate, showDelete, update_state_listener, insert_state_listener }
