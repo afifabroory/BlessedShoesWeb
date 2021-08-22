@@ -2,8 +2,18 @@
 
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { defaultAdmin } from '../admin/admin'
-import { insert_state_listener } from "../utils/admin_data"
+
+import { 
+  defaultAdmin, 
+  initOperationListener,
+  initBtnListener_Insert
+} from '../admin/admin'
+
+import {
+  insert_state_listener
+} from "../utils/admin_data"
+
+import { init_listner } from "../database/database"
 
 function signInOut(email, password) {
   const auth = firebase.auth();
@@ -37,9 +47,14 @@ function initBtnListener() {
 document.addEventListener('DOMContentLoaded', () => {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
+      console.log("login")
       defaultAdmin();
+      initOperationListener();
       insert_state_listener();
+      initBtnListener_Insert(); 
+      init_listner(); // Listener for database
     } else {
+      console.log("logout")
       document.querySelector("#admin_login").hidden = false
       initBtnListener()
     }

@@ -15,7 +15,8 @@ firebase.database().useEmulator("localhost", 9000); // Development Purposes
 
 // User
 function read(id, eventType="value") {
-    var data =  firebase.database().ref(id).once(eventType).then((dataSnapshot) => {
+    var data =  firebase.database().ref(id.toUpperCase()).once(eventType).then((dataSnapshot) => {
+        console.log("Request read DB")
         if (dataSnapshot.exists()) {
             return dataSnapshot.val();
         } else {
@@ -25,7 +26,6 @@ function read(id, eventType="value") {
         console.log("Something wrong!");
     });
 
-    firebase.database().goOffline();
     return data;
 }
 
@@ -34,22 +34,7 @@ function read(id, eventType="value") {
  */
 function insert(id, data) {
     
-    const dtArr = [];
-    var dt;
-    
-    for (var i = 0; i < data.length; ++i) {
-        dt = data[i];
-        dtArr.push({
-            "ShoesBrand": dt.brand,
-            "Service"   : dt.service,
-            "Size"      : dt.size,
-            "Status"    : dt.status,
-            "TimestampIn" : firebase.database.ServerValue.TIMESTAMP,
-            "TimestampOut": "-"
-        });
-    }
-
-    firebase.database().ref(id).set(dtArr).then(() => {
+    firebase.database().ref(id.toUpperCase()).set(data).then(() => {
         console.log("Success");
     }).catch(() => {
         console.log("Something wrong!");
@@ -57,27 +42,24 @@ function insert(id, data) {
 }
 
 function update(id, data) {
-    firebase.database().ref(id).update(data);
+    firebase.database().ref(id.toUpperCase()).set(data);
 }
 
 function remove(id) {
-    firebase.database().ref(id).remove();
+    firebase.database().ref(id.toUpperCase()).remove();
 }
 
 function init_listner() {
-    firebase.database().ref("/").on('child_changed', function(childSnapshot) {
+    firebase.database().ref("/").on('child_changed', (childSnapshot) => {
         storeData(childSnapshot.key, JSON.stringify(childSnapshot.val()));
     });
 
-    firebase.database().ref("/").on('child_added', function(childSnapshot) {
-        storeData(childSnapshot.key, JSON.stringify(childSnapshot.val()));
-    });
-
-    firebase.database().ref("/").on('child_removed', function(childSnapshot) {
+    firebase.database().ref("/").on('child_removed', (childSnapshot) => {
         removeData(childSnapshot.key);
     });
 }
 
-init_listner();
+var db = firebase.database();
+var ServerValue = firebase.database.ServerValue
 
-export {read, update, insert, remove};
+export {read, update, insert, remove, db, ServerValue, init_listner};

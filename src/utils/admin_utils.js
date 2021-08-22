@@ -43,7 +43,7 @@ function createInputEl(elAttr, labelText, disable, parent, isLast=true, func=nul
   input = setAttributes(input, elAttr)
   input.disabled = disable;
   parent.append(input);
-  setBreakAttr(parent); // TODO
+  setBreakAttr(parent); // TODO: ???
 }
 
 function createCheckEl(elAttr, labelText, disable, parent, isLast=true, func=null, el=null) {
@@ -87,21 +87,29 @@ function createSelectEl(vals, valID, labelText, parent, isLast=true, func=null, 
   setBreakAttr(parent); // TODO
 }
 
-function createOptionEl(parent, dataLength, isReset=false, custMsg="- ENTER ID FIRST -") {  
-  var elementLen = parent.childNodes.length;
+function createOptionEl(parent, data=[0], isReset=false, custMsg="- ENTER ID FIRST -") {  
+
+  var elementLen = parent.childNodes.length; // TODO: Change this line to childCounts?
   for (var i = 0; i < elementLen; ++i) {
     parent.removeChild(parent.childNodes[0]);
   }
 
-  for (var i = 0; i < dataLength; ++i) {
-    var option = document.createElement("option");
-    option.setAttribute("value", i);
+  var values_IT = data.values(), current_IT;
+  var i = 0, index = 0;
+  do  {    
+    current_IT = values_IT.next();
+    
+    if (current_IT.value) {
+      var option = document.createElement("option");
+      option.setAttribute("value", index);
+      
+      if (!isReset) option.innerHTML = (i+1);
+      else option.innerHTML = custMsg;
 
-    if (!isReset) option.innerHTML = (i+1);
-    else option.innerHTML = custMsg;
-
-    parent.append(option);
-  }
+      parent.append(option); ++i;
+    } 
+    ++index;
+  } while (!current_IT.done);
 }
 
 export {

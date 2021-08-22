@@ -5,7 +5,8 @@ const default_attrs = [{
 }, {
     id: "shoesID",
     type: "text",
-    autocomplete: "off"
+    autocomplete: "off",
+    maxlength: "3"
 }, {
     sheoesNo: [{
         id: "shoesNo",
@@ -44,7 +45,10 @@ const default_attrs = [{
     }, "ADD", 1],
     insertBtn: [{
         id: "insertBtn"
-    }, "INSERT", 1]
+    }, "INSERT", 1],
+    cancelBtn: [{
+        id: "cancelBtn",
+    }, "CANCEL", 1]
 }];
 
 const update_attrs = [{
@@ -83,7 +87,7 @@ const delete_attrs = [{
 const service_option_index = {
     "Deep Clean": 0,
     "Fast Clean": 1,
-    "Whitening treatment": 2,
+    "Whitening Treatment": 2,
     Repaint: 3,
     Regluer: 4
 }

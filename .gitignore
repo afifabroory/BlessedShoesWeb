@@ -64,23 +64,4 @@ node_modules/
 
 # dotenv environment variables file
 .env
-public/script/503.js
-public/script/503.js.LICENSE.txt
-public/script/admin.js
-public/script/503.js.LICENSE.txt
-public/script/503.js
-public/script/503.js.LICENSE.txt
-public/script/503.js
-public/script/503.js.LICENSE.txt
-public/script/503.js
-public/script/503.js.LICENSE.txt
-public/script/admin.js
-public/script/login.js
-public/script/database.js
-public/script/main.js
-public/script/login.js
-public/script/main.js
-public/script/login.js
-public/script/main.js
-public/script/admin.js
-public/script/database.js
+public/script/

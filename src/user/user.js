@@ -4,7 +4,8 @@ import {
     read,
     insert,
     update,
-    remove
+    remove,
+    db
 } from "../database/database";
 
 const dataResponse = document.querySelectorAll("div.response>p");
@@ -49,11 +50,13 @@ inputBtn.addEventListener("click", () => {
 
     if ((input.length > 0) && isValidRD(rdBtn)) {
         if (rdBtn[0].checked) {
+            db.goOnline();
             const response = read(input);
             response.then((data) => {
                 console.log(data);
                 showData(data);
             });
+            db.goOffline();
         } else if (rdBtn[1].checked) {
             var data = [
                 {"brand": "Nike", "service": "Deep Clean", "size": "47", "status": "In Progress"},

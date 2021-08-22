@@ -1,7 +1,7 @@
 import { getData } from "../database/local_database"
 import { createOptionEl } from "./admin_utils"
 import { service_option_index, status_option_index } from "../admin/admin_const"
-import { is_intOnly } from "../utils/validate"
+import { is_intOnly, isValid_UpdateState, isValid_InsertState, isValid_StatusChange } from "../utils/validate"
 
 function toggle_delete() {
     var shoesNo = document.querySelector("#div-shoesNo>#shoesNo");
@@ -32,35 +32,46 @@ function toggle_update() {
 }
 
 function updateBtn_disabled(isChangeState) {
-    var updateStatus = document.querySelector("#div-updateStatus>#updateStatus");
     var btn = document.querySelector("#div-Btn>#updateBtn");
+    btn.disabled = isChangeState;
+}
 
-    if (isChangeState) {
-        updateStatus.disabled = false;
-        btn.disabled = false;
-    } else {
-        updateStatus.disabled = true;
-        btn.disabled = true;
-    }
+function updateBox_disabled(isChangeState) {
+    var length = document.querySelector("#div-shoesNo>#shoesNo").childElementCount;
+    var updateStatus = document.querySelector("#div-updateStatus>#updateStatus");
+    if (length > 1) updateStatus.disabled = isChangeState;
+    else updateStatus.disabled = true;
+    
+    if (isChangeState) updateStatus.checked = false;
 }
 
 function insertBtn_disabled(state) {
     var btn = document.querySelector("#div-Btn");
 
+    var key = document.querySelector("#div-shoesID>#shoesID").value;
+    var data = getData(key);
+
+    var isEmpty;
+    if (data) {
+        isEmpty = data.length === 0;
+    } else {
+        isEmpty = true;
+    }
+
     btn.children[0].disabled = state;
-    btn.children[1].disabled = state;
+    btn.children[1].disabled = state && isEmpty
+    btn.children[2].disabled = isEmpty
 }
 
-function showUpdate(key, isId=true) {
-    var data = getData(key);
-    
+function showUpdate(data, isId=true) {
+    document.querySelector("#div-updateStatus>#updateStatus").checked = false;
     var select = document.querySelector("#div-shoesNo>#shoesNo");
-    const shoesID = document.querySelector("#div-shoesID>#shoesID");
-
     var state = !select.disabled;
-
+    
     if (data) {
-        if (isId) createOptionEl(select, data.length);
+        data = data.filter((el) => { return el != null }); // Filter empty data in array
+        
+        if (isId) createOptionEl(select, data);
         if (isId && !state) toggle_update();
 
         var i = parseInt(select.value);
@@ -73,32 +84,20 @@ function showUpdate(key, isId=true) {
         var status_option = document.querySelector("#div-shoesStatus>#shoesStatus").getElementsByTagName("option");
         status_option[status_option_index[data[i].Status]].selected = "select";
     } else {
-        if (shoesID.value.length === 0) createOptionEl(select, 1, true);
-        else createOptionEl(select, 1, true, "");
-        
         clearUpdate();
         if (state) toggle_update();
+        updateBtn_disabled(true);
     }
-    updateBtn_disabled(false);
 }
 
-function clearUpdate() {
-    document.querySelector("#div-shoesBrand>#shoesBrand").value = "";
-    document.querySelector("#div-shoesSize>#shoesSize").value = "";
-    document.querySelector("#div-shoesService>#shoesService").getElementsByTagName("option")[0].selected = "select";
-    document.querySelector("#div-shoesStatus>#shoesStatus").getElementsByTagName("option")[0].selected = "select";
-}
-
-function showDelete(key, isId=true) {
-    var data = getData(key);
-
+function showDelete(data, isId=true) {
     var select = document.querySelector("#div-shoesNo>#shoesNo");
     const shoesID = document.querySelector("#div-shoesID>#shoesID");
     
     var state = !select.disabled;
 
     if (data) {
-        if (isId) { createOptionEl(select, data.length); }
+        if (isId) { createOptionEl(select, data); }
         if (isId && !state) toggle_delete();
 
         var i = parseInt(select.value);
@@ -107,12 +106,33 @@ function showDelete(key, isId=true) {
         document.querySelector("#div-shoesService>#shoesService").value = data[i].Service;
         document.querySelector("#div-shoesStatus>#shoesStatus").value = data[i].Status;
     } else {
-        if (shoesID.value.length === 0) createOptionEl(select, 1, true);
-        else createOptionEl(select, 1, true, "");
+        if (shoesID.value.length === 0) createOptionEl(select, [0], true);
+        else createOptionEl(select, [0], true, "");
         
         clearDelete();
         if (state) toggle_delete();
     }
+}
+
+function clearInsert() {
+    document.querySelector("#div-shoesBrand>#shoesBrand").value = "";
+    document.querySelector("#div-shoesSize>#shoesSize").value = "";
+    document.querySelector("#div-shoesService>#shoesService").getElementsByTagName("option")[0].selected = "select";
+    document.querySelector("#div-shoesStatus>#shoesStatus").getElementsByTagName("option")[0].selected = "select";
+}
+
+function clearUpdate() {
+    var shoesID = document.querySelector("#div-shoesID>#shoesID");
+    var select = document.querySelector("#div-shoesNo>#shoesNo");
+
+    if (shoesID.value.length === 0) createOptionEl(select, [0], true);
+    else createOptionEl(select, [0], true, "");
+
+    document.querySelector("#div-shoesBrand>#shoesBrand").value = "";
+    document.querySelector("#div-shoesSize>#shoesSize").value = "";
+    document.querySelector("#div-shoesService>#shoesService").getElementsByTagName("option")[0].selected = "select";
+    document.querySelector("#div-shoesStatus>#shoesStatus").getElementsByTagName("option")[0].selected = "select";
+    document.querySelector("#div-updateStatus>#updateStatus").checked = false;
 }
 
 function clearDelete() {
@@ -120,34 +140,18 @@ function clearDelete() {
     document.querySelector("#div-shoesSize>#shoesSize").value = "";
     document.querySelector("#div-shoesService>#shoesService").value = "";
     document.querySelector("#div-shoesStatus>#shoesStatus").value = "";
-}
-
-var key;
-var index;
-var data;
-function helperProcedure() {
-    key = document.querySelector("#div-shoesID>#shoesID").value;
-    index = document.querySelector("#div-shoesNo>#shoesNo").selectedIndex;
-    data = getData(key);
+    document.querySelector("#div-deleteAllCheck>#deleteAllCheck").checked = false;
 }
 
 function insert_state_listener() {
     document.querySelector("#div-shoesBrand>#shoesBrand").addEventListener("input", () => {
-        var shoesSize = document.querySelector("#div-shoesSize>#shoesSize").value
-        var shoesBrand = document.querySelector("#div-shoesBrand>#shoesBrand").value
-
-        if ((shoesSize.length > 0) && (shoesBrand.length > 0)) {
-            insertBtn_disabled(false);
-        } else {
-            insertBtn_disabled(true);
-        }
+        insertBtn_disabled(!isValid_InsertState());
     });
 
     document.querySelector("#div-shoesSize>#shoesSize").addEventListener("input", () => {
+        var tmp = '';
         var shoesSize = document.querySelector("#div-shoesSize>#shoesSize").value
-        var shoesBrand = document.querySelector("#div-shoesBrand>#shoesBrand").value
         
-        var tmp = "";
         for (var i = 0; i < 3; ++i) {    
             if (is_intOnly(shoesSize.slice(i,i+1))) {
                 tmp += shoesSize.slice(i,i+1);
@@ -156,30 +160,24 @@ function insert_state_listener() {
 
         // Update content
         document.querySelector("#div-shoesSize>#shoesSize").value = tmp;
-        shoesSize = document.querySelector("#div-shoesSize>#shoesSize").value
-        shoesBrand = document.querySelector("#div-shoesBrand>#shoesBrand").value
-        if ((shoesSize.length > 0) && (shoesBrand.length > 0)) {
-            insertBtn_disabled(false);
-        } else {
-            insertBtn_disabled(true);
-        }
+    
+        insertBtn_disabled(!isValid_InsertState());
     });
 }
 
 function update_state_listener() {
 
+    document.querySelector("#div-shoesNo>#shoesNo").addEventListener("input", () => {
+        updateBtn_disabled(true);
+        updateBox_disabled(true);
+    });
+
     document.querySelector("#div-shoesBrand>#shoesBrand").addEventListener("input", () => {
-        var shoesBrand = document.querySelector("#shoesBrand");
-        helperProcedure();
-
-        var shoesBrandState = shoesBrand.value !== data[index].ShoesBrand;
-
-        updateBtn_disabled(shoesBrandState);
+        updateBtn_disabled(!isValid_UpdateState());
     });
 
     document.querySelector("#div-shoesSize>#shoesSize").addEventListener("input", () => {
-        var shoesSize = document.querySelector("#shoesSize");
-        helperProcedure();
+        var shoesSize = document.querySelector("#shoesSize").value;
 
         var tmp = "";
         for (var i = 0; i < 3; ++i) {    
@@ -187,30 +185,32 @@ function update_state_listener() {
                 tmp += shoesSize.slice(i,i+1);
             }
         }
-        
         document.querySelector("#div-shoesSize>#shoesSize").value = tmp;    // Update content
 
-        var shoesSizeState = tmp !== data[index].Size;
-        updateBtn_disabled(shoesSizeState);
+        updateBtn_disabled(!isValid_UpdateState());
     });
 
+    // Select Element
     document.querySelector("#div-shoesService>#shoesService").addEventListener("input", () => {
-        var shoesService = document.querySelector("#div-shoesService>#shoesService");
-        helperProcedure();
-
-        var shoesServiceState = shoesService.value !== data[index].Service;
-        
-        updateBtn_disabled(shoesServiceState);
+        updateBtn_disabled(!isValid_UpdateState());
     });
 
     document.querySelector("#div-shoesStatus>#shoesStatus").addEventListener("input", () => {
-        var shoesStatus = document.querySelector("#div-shoesStatus>#shoesStatus");
-        helperProcedure();
-
-        var shoesStatusState = shoesStatus.value !== data[index].Status;
-        
-        updateBtn_disabled(shoesStatusState);
+        updateBtn_disabled(!isValid_UpdateState());
+        updateBox_disabled(!isValid_StatusChange());
     });
 }
 
-export { showUpdate, showDelete, update_state_listener, insert_state_listener }
+export { 
+    showUpdate, 
+    showDelete, 
+    clearInsert, 
+    clearUpdate,
+    clearDelete,
+    update_state_listener, 
+    insert_state_listener,
+    insertBtn_disabled,
+    updateBtn_disabled,
+    toggle_update,
+    toggle_delete
+}
