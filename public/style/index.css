@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700');
+
+*, *:before, *:after {
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
+  }
+  
+  ::-webkit-input-placeholder {
+    color: #56585b;
+  }
+  
+  ::-moz-placeholder {
+    color: #56585b;
+  }
+  
+  :-moz-placeholder {
+    color: #56585b;
+  }
+  
+  html {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Lato', sans-serif;
+    margin: 0;
+    background: #70AADC;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    color: #0a0a0b;
+  }
+  
+  ul, nav{
+    list-style: none;
+    padding: 0;
+  }
+  
+  a {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 0.9;
+  }
+  
+  a:hover {
+    opacity: 1;
+  }
+
+  .input-message {
+    color: #fff;
+  }
+  
+  h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  
+  i {
+    font-size: 1.3rem;
+  }
+
+  span {
+    display: inline-block;
+  }
+  
+  header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    padding: 0 20px;
+    background: #206199;
+  }
+  
+  header nav ul {
+    display: inline-flex;
+  }
+  
+  header nav li{
+    margin: 0 15px;
+  }
+  
+  header nav li:first-child{
+    margin-left: 0; 
+  }
+  
+  header nav li:last-child{
+    margin-right: 0;  
+  }
+  
+  a.btn {
+    color: #fff;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.5);
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    transition: all 0.2s;
+  }
+  
+  a.btn:hover {
+    background: #3D70B1;
+    border: 1px solid #3D70B1;
+    color: #fff;
+  }
+  
+  p.input-message {
+    text-align: center;
+  }
+  
+  .cover  {
+    height: auto;
+    width: 100%;
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.05)), to(rgba(0,0,0,0)));
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 100%);
+    padding: 50px;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+    align-items: center;
+  }
+  
+  .flex-form input[type="button"] {
+    background: #206199;
+    border: 1px solid #206199;
+    color: #fff;
+    padding: 0 30px;
+    cursor: pointer;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    transition: all 0.2s;
+    font-weight: 600;
+  }
+  
+  .flex-form input[type="button"]:hover {
+    background: #3D70B1;
+    border: 1px solid #3D70B1;
+  }
+  
+  .flex-form {
+    display: -webkit-box;
+    display: flex;
+    z-index: 10;
+    position: relative;
+    width: 100%;
+    box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.3);
+  }
+  
+  .flex-form > * {
+    border: 0;
+    padding: 0 10px;
+    background: #fff;
+    line-height: 50px;
+    font-size: 1rem;
+    border-radius: 0;
+    outline: 0;
+    -webkit-appearance: none;
+  }
+  
+  input[type="text"] {
+    flex-basis: 100%;
+    font-size: 20px;
+    text-align: center  ;
+  }
+  
+  
+  @media screen and (max-width:800px) {
+    h1 {
+      font-size: 3rem;
+    }
+  }
+  
+  /* 500px */
+  /*@media screen and (max-width:500px) {
+    body {
+      font-size: 0.9rem;
+    }
+  
+    .flex-form {
+      width: 100%;
+    }
+
+    .flex-form > * {
+      font-size: 0.9rem;
+    }
+  
+    header {
+      padding: 10px !important;
+    }
+  
+    header h2 {
+      margin-bottom: 15px;
+    }
+  
+    h1 {
+      font-size: 2.8rem;
+    }
+  
+    .cover {
+      padding: 20px;
+    }
+  
+    #madeby {
+      padding: 30px 20px;
+    }
+  }*/
+
+  @media screen and (max-width:600px) {
+    header {
+      flex-direction: column;
+    }
+  }
+  
+  @media screen and (max-width:450px) {
+    body {
+      font-size: 0.9rem;
+    }
+
+    header nav li{
+      margin: 0 10px;
+    }
+
+    header {
+      padding: 10px !important;
+    }
+  
+    .flex-form {
+      display: -webkit-box;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      flex-direction: column;
+    }
+
+    .flex-form input[type="button"] {
+      flex-basis: 0;
+      line-height: 40px;
+    }
+
+    .flex-form input[type="text"] {
+      font-size: 16px;
+    }
+  
+    label {
+      display: none;
+    }
+  
+    h1 {
+      font-size: 2.4rem;
+    }
+  
+    @media screen and (max-width:350px) {  
+      .container {
+          width: fit-content;
+      }
+    }
+  }

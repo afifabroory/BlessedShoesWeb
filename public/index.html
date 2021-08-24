@@ -2,36 +2,48 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="viewport" content="width=device-width, initial-scale=1 shrink-to-fit=no">
       <script src="script/sharedApp.js"></script>
       <script src="script/642.js"></script>
       <script src="script/database.js"></script>
+      <link rel="stylesheet" href="style/index.css">
       <title>BlessedShoes</title>
    </head>
    <body>
-      <h2>Welcome to Experimental Stage v0.4</h2>
+      <!--<h2>Welcome to Experimental Stage v0.4</h2>
       <p>- Security and Safety Update! Now, database cannot modified from console!</p>
       <p>- Database ready to operate!</p>
-      <p>- Admin page are ready to operate!</p>
-      <div>
-         <label for="inputID">ID:</label>
-         <input id="inputID" type="text" autocomplete="off" disabled><br>
-         <input id="read" value="READ" name="option" type="radio" disabled>
-         <label for="read">Read</label><br>
-         <input id="write" value="WRITE" name="option" type="radio" disabled>
-         <label for="write">Write</label><br>
-         <input id="update" value="UPDATE" name="option" type="radio" disabled>
-         <label for="update">Update</label><br><br>
-         <input id="remove" value="REMOVE" name="option" type="radio" disabled>
-         <label for="remove">Remove</label><br><br>
-         <input id="inputBtn" type="button" value="Send" disabled>
-      </div>
-      <div class="response">
-         <p id="shoesBrand">Merk Sepatu: null</p>
-         <p id="size">Size: null</p>
-         <p id="service">Service: null</p>
-         <p id="status">Status: null</p>
-         <p id="timestamp">Timestamp: null</p>
+      <p>- Admin page are ready to operate!</p>-->
+      <div class="container">
+
+         <header>
+            <h2><a href="#"><i class="ion-plane"></i> Blessed Shoesclean</a></h2>
+            <nav>
+              <ul>
+                <li>
+                  <a class="btn" href="#" title="List Harga">Price List</a>
+                </li>
+              </ul>
+              <ul>
+               <li>
+                 <a class="btn" href="#" title="Contact & Social Media">Contact & Social Media</a>
+               </li>
+             </ul>
+            </nav>
+          </header>
+
+          <!-- Input Cover-->
+         
+         <div class="cover">
+           <div>
+             <h1><span>#You</span><span>Look</span><span>Better</span><span>With</span><span>Your</span><span>Clean</span><span>Shoes</span></h1>
+             <div  class="flex-form">
+               <input id="inputID" type="text" placeholder="Kode Transaksi" autocomplete="off">
+               <input id="inputBtn" type="button" value="CEK">
+             </div>
+             <p class="input-message">Cek status pengerjaan sepatu Anda, dengan memasukkan kode transaksi pada kotak diatas.</p>
+           </div>
+         </div>
       </div>
       <script src="script/main.js"></script>
    </body>
