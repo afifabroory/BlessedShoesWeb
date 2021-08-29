@@ -52,10 +52,20 @@ span {
   display: inline-block;
 }
 
+.instagram {
+  width: 60px;
+  height: 60px;
+}
+
+.whatsapp {
+  width: 60px;
+  height: 60px;
+}
+
 .container {
   margin: 0 auto;
   max-width: 1440px;
-  min-width: 1024px;
+  min-width: 360px;
 }
 
 /* HEADER PART */
@@ -77,8 +87,8 @@ nav, .title { float:right!important; }
 
 .title { margin: 10px; }
 .logo { 
-  width: 100px;
-  height: 100px;
+  width: 110px;
+  height: 110px;
   background: white;
   border-radius: 100%;
 }
@@ -94,10 +104,10 @@ ul {
 }
 li {margin-left: 20px;}
 
-a.btn {
+.btn {
   text-transform: uppercase;
   font-weight: bold;
-  font-size: larger;
+  font-size: x-large;
   color: #fff;
   padding: 5px;
   margin: 0 5px;
@@ -108,7 +118,7 @@ a.btn {
 
 .instagram:hover, .whatsapp:hover { fill-opacity: 60%; }
 
-a.btn:hover {
+.btn:hover {
   background: #3D70B1;
   border: 1px solid #3D70B1;
   color: #fff;
@@ -121,7 +131,7 @@ p.input-message {
 .body  {
   height: 100%;
   width: 100%;
-  margin-top: 30px;
+  margin-top: 25px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -129,7 +139,7 @@ p.input-message {
 
 #title {
   color: white;
-  font-size: 4rem;
+  font-size: 5rem;
   text-transform: capitalize;
   text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
@@ -144,8 +154,8 @@ p.input-message {
 #board {
   border: 5px solid white;
   padding: inherit;
-  width: 20rem;
-  height: 20rem;
+  width: 26rem;
+  height: 26rem;
   float: right;
   margin-left: 40px;
 }
@@ -190,56 +200,123 @@ input[type="text"] {
   text-align: center  ;
 }
 
+/* 60x60 for WhatsApp and Instagram size*/
+@media screen and (max-width:1260px){
+  #title {
+    font-size: 4rem;
+  }
 
-@media screen and (max-width:800px) {
-  h1 {
-    font-size: 3rem;
+  #board {
+    width: 20rem;
+    height: 20rem;
+  }
+
+  .logo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .btn {
+    font-size: larger;
   }
 }
 
-/* 500px */
-/*@media screen and (max-width:500px) {
-  body {
-    font-size: 0.9rem;
+@media screen and (max-width:1024px){
+  #title {
+    font-size: 3.5rem;
   }
 
-  .flex-form {
-    width: 100%;
+  #board {
+    width: 19.5rem;
+    height: 19.5rem;
   }
-  .flex-form > * {
-    font-size: 0.9rem;
+}
+
+@media screen and (max-width:924px) {
+  #title {
+    font-size: 3rem;
   }
 
-  .header {
-    padding: 10px !important;
+  #board {
+    width: 19rem;
+    height: 19rem;
+  }
+}
+
+@media screen and (max-width:846px) {
+  #title {
+    font-size: 2.5rem;
   }
 
-  .header h2 {
-    margin-bottom: 15px;
+  #board {
+    width: 18.5rem;
+    height: 18.5rem;
+  }
+}
+
+/* NEXT 758px */
+@media screen and (max-width:758px) {
+  .body {
+    flex-direction: column;
   }
 
-  h1 {
-    font-size: 2.8rem;
-  }
-
-  .cover {
-    padding: 20px;
-  }
-
-  #madeby {
-    padding: 30px 20px;
-  }
-}*/
-@media screen and (max-width:600px) {
   .header {
     flex-direction: column;
   }
+
+  #title {
+    font-size: 4rem;
+  }
+
+  #board {
+    width: 26rem;
+    height: 26rem;
+    margin-left: 0px;
+    margin: 10px 0 0 0;
+  }
 }
 
-@media screen and (max-width:450px) {
-  body {
-    font-size: 0.9rem;
+@media screen and (max-width:650px) {
+  #title {
+    font-size: 3.5rem;
   }
+}
+
+@media screen and (max-width:570px) {
+  #title {
+    font-size: 3rem;
+  }
+
+  #board {
+    width: 22rem;
+    height: 22rem;
+  }
+
+  .instagram {
+    width: 50px;
+    height: 50px;
+  }
+
+  .whatsapp {
+    width: 50px;
+    height: 50px;
+  }
+
+  .btn {
+    font-size: large;
+  }
+}
+
+@media screen and (max-width:500px) {
+  #title {
+    font-size: 2.5rem;
+  }
+
+  #board {
+    width:18rem;
+    height: 18rem;
+  }
+
   .header nav li{
     margin: 0 10px;
   }
@@ -247,7 +324,7 @@ input[type="text"] {
     padding: 10px !important;
   }
 
-  .flex-form {
+  /*.flex-form {
     display: -webkit-box;
     display: flex;
     -webkit-box-orient: vertical;
@@ -266,13 +343,40 @@ input[type="text"] {
     display: none;
   }
 
-  h1 {
-    font-size: 2.4rem;
-  }
-
   @media screen and (max-width:350px) {  
     .container {
         width: fit-content;
     }
+  }*/
+}
+
+@media screen and (max-width:420px) {
+  .flex-form {
+    flex-direction: column;
+  }
+
+  #title {
+    font-size: 2rem;
+  }
+}
+
+@media screen and (max-width:380px) {
+  .logo {
+    width: 80px;
+    height: 80px;
+  }
+
+  .instagram {
+    width: 40px;
+    height: 40px;
+  }
+
+  .whatsapp {
+    width: 40px;
+    height: 40px;
+  }
+
+  .btn {
+    font-size: medium;
   }
 }
