@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/database";
 import { storeData, removeData } from "./local_database"
-
+console.log("test");
 firebase.initializeApp({
     apiKey: "AIzaSyA4-PsDCaElqrk9i6CYpTglUtW5m6-7cVA",
     authDomain: "test-955e0.firebaseapp.com",

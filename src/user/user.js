@@ -1,79 +1,90 @@
 "use strict";
 
-import {
-    read,
-    insert,
-    update,
-    remove,
-    db
-} from "../database/database";
+import {read} from "../database/database";
+import {getData, storeData} from "../database/local_database";
+import {fetchListMedia, fetchMediaByID, fetchAlbumByID} from "../utils/instagram";
 
-const dataResponse = document.querySelectorAll("div.response>p");
-const rdBtn = document.getElementsByName("option");
-const inputID = document.querySelector("div>#inputID");
-const inputBtn = document.querySelector("div>#inputBtn");
+function displayIGMedia() {
+    var dataSession = getData("_MEDIA");
+    var mediaType = getData("_MEDIATYPE");
 
-document.addEventListener('DOMContentLoaded', () => {
-    inputID.disabled = false;
-    for (var i = 0; i < rdBtn.length; ++i) { rdBtn[i].disabled = false; }
-    inputBtn.disabled = false;
+    if (!dataSession || !mediaType) {
+        fetchListMedia().then((listMedia) => {
+            var dataArr = listMedia["data"]
+            for (const idx in dataArr) {
+                var feed = dataArr[idx];
+                
+                mediaType = feed["media_type"];
+                if (mediaType === "IMAGE") {
+                    storeData("_MEDIAURL", JSON.stringify(feed["permalink"]));
+                    fetchMediaByID(feed["id"]).then((media) => {
+                        storeData("_MEDIA", JSON.stringify(media)); 
+                        displayMedia(mediaType);
+                    });
+                    break;
+                } else if (mediaType === "CAROUSEL_ALBUM") {
+                    storeData("_MEDIAURL", JSON.stringify(feed["permalink"]));
+                    fetchAlbumByID(feed["id"]).then((media) => { 
+                        storeData("_MEDIA", JSON.stringify(media["data"])); 
+                        displayMedia(mediaType);
+                    });
+                    break;
+                }
+            }
+            storeData("_MEDIATYPE", JSON.stringify(mediaType));
+        });
+    } else {
+        displayMedia(mediaType);
+    }
+}
+
+function displayMedia(mediaType) {
+    var mediaDiv = document.querySelector(".content");
+
+    if (mediaType === "CAROUSEL_ALBUM") {
+        //var imageURL = getData("_MEDIAURL");
+        var dataArr = getData("_MEDIA");
+
+        for (const idx in dataArr) {
+            var data = dataArr[idx];
+        
+            if (data["media_type"] !== "VIDEO") {
+                var div = document.createElement("div");
+                div.setAttribute("class", "ig-content");
+            
+                var img = document.createElement("img");
+                img.setAttribute("src", data["media_url"])
+            
+                if (idx !== "0") div.style.display = "none";
+
+                div.append(img);
+                mediaDiv.append(div);
+            }
+        }
+    } else if (mediaType === "IMAGE") {
+        var dataArr = getData("_MEDIA");
+
+        var div = document.createElement("div");
+        div.setAttribute("id", `instagram`);
+
+        var img = document.createElement("img");
+        img.setAttribute("src", data["media_url"])
+
+        img.append(div);
+        mediaDiv.append(div);
+    }
+
+    document.getElementById("board-info").style.display = "block";
+}
+
+document.querySelector("#inputBtn").addEventListener("click", () => {
+    var input = document.querySelector("#inputID").value;
+    var data = read(input);
+    data.then((data) => {
+        console.log(data);
+    })
 });
 
-// Development purpose
-function showData(data) {
-    if (data !== false) {
-        dataResponse[0].textContent = "Merk Sepatu: " + data.ShoesBrand;
-        dataResponse[1].textContent = "Size: " + data.Size;
-        dataResponse[2].textContent = "Service: " + data.Service;
-        dataResponse[3].textContent = "Status: " + data.Status;
-        dataResponse[4].textContent = "Timestamp: " + data.Timestamp;
-    } else {
-        dataResponse[0].textContent = "Merk Sepatu: null";
-        dataResponse[1].textContent = "Size: null";
-        dataResponse[2].textContent = "Service: null";
-        dataResponse[3].textContent = "Status: null";
-        dataResponse[4].textContent = "Timestamp: null";
-    }
-}
-
-function isValidRD(rdInput) {
-    for (var i = 0; i < rdInput.length; ++i) {
-        if (rdInput[i].checked == true) {
-            return true;
-        }
-    }
-    return false;
-}
-
-inputBtn.addEventListener("click", () => {
-    const    input = inputID.value;
-
-    if ((input.length > 0) && isValidRD(rdBtn)) {
-        if (rdBtn[0].checked) {
-            db.goOnline();
-            const response = read(input);
-            response.then((data) => {
-                console.log(data);
-                showData(data);
-            });
-            db.goOffline();
-        } else if (rdBtn[1].checked) {
-            var data = [
-                {"brand": "Nike", "service": "Deep Clean", "size": "47", "status": "In Progress"},
-                {"brand": "Puma", "service": "Fast Clean", "size": "67", "status": "Done"}
-            ]
-            insert(input,data);
-        } else if (rdBtn[2].checked) {
-            update(input, {
-                "ShoesBrand": "Nike"
-            });
-        } else if (rdBtn[3].checked) {
-            remove(input);
-        } else {
-            console.log("Something wrong...")
-        }
-    } else {
-        console.log("Input ID dan Opsi harus dipilih! ")
-    }
-
+document.addEventListener("DOMContentLoaded", () => {
+    displayIGMedia();
 });

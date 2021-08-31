@@ -1,15 +1,13 @@
 var storage = window.sessionStorage;
 
 function getData(key) {
-    var data =  JSON.parse(storage.getItem(key.toUpperCase()))
-
-    //if (Array.isArray(data)) {
-    //    data = data.filter((el) => {
-    //        return el != null;
-    //    });
-    //}
-
-    return data;
+    var data = storage.getItem(key.toUpperCase());
+    
+    if (typeof(data) === "undefined") {
+        return null 
+    } else {
+        return JSON.parse(data);
+    }
 }
 
 function storeData(key, data) {

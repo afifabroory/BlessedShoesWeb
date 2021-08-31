@@ -13,7 +13,7 @@ module.exports = {
         },
         database: {
             import: './src/database/database.js',
-            dependOn: 'sharedApp'
+            //dependOn: 'sharedApp'
         },
         login: {
           import: './src/login/login.js',
