@@ -1,32 +1,39 @@
 "use strict";
 
 import {read} from "../database/database";
-import {getData, storeData} from "../database/local_database";
+import {getData, storeData, removeData, itsExpire, itExists} from "../database/local_database";
 import {fetchListMedia, fetchMediaByID, fetchAlbumByID} from "../utils/instagram";
 
 function displayIGMedia() {
-    var dataSession = getData("_MEDIA");
-    var mediaType = getData("_MEDIATYPE");
+    var dataSession = itExists("_MEDIA");
+    var mediaType = itExists("_MEDIATYPE");
 
+    if (itsExpire("_MEDIAEXPIRE")) {
+        var KEY = ["_MEDIA", "_MEDIATYPE", "_MEDIAURL"]
+        for (var idx in KEY) removeData(KEY[idx]);
+    }
+
+    console.log(dataSession);
+    console.log(mediaType);
     if (!dataSession || !mediaType) {
         fetchListMedia().then((listMedia) => {
             var dataArr = listMedia["data"]
-            for (const idx in dataArr) {
+            for (var idx in dataArr) {
                 var feed = dataArr[idx];
-                
+
                 mediaType = feed["media_type"];
                 if (mediaType === "IMAGE") {
                     storeData("_MEDIAURL", JSON.stringify(feed["permalink"]));
                     fetchMediaByID(feed["id"]).then((media) => {
                         storeData("_MEDIA", JSON.stringify(media)); 
-                        displayMedia(mediaType);
+                        displayMedia();
                     });
                     break;
                 } else if (mediaType === "CAROUSEL_ALBUM") {
                     storeData("_MEDIAURL", JSON.stringify(feed["permalink"]));
                     fetchAlbumByID(feed["id"]).then((media) => { 
                         storeData("_MEDIA", JSON.stringify(media["data"])); 
-                        displayMedia(mediaType);
+                        displayMedia();
                     });
                     break;
                 }
@@ -34,16 +41,21 @@ function displayIGMedia() {
             storeData("_MEDIATYPE", JSON.stringify(mediaType));
         });
     } else {
-        displayMedia(mediaType);
+        displayMedia();
     }
 }
 
-function displayMedia(mediaType) {
+function displayMedia() {
     var mediaDiv = document.querySelector(".content");
+    var imageURL = getData("_MEDIAURL");
+    var mediaType = getData("_MEDIATYPE");
+
+    console.log(mediaType)
 
     if (mediaType === "CAROUSEL_ALBUM") {
-        //var imageURL = getData("_MEDIAURL");
         var dataArr = getData("_MEDIA");
+        console.log("CAROUSEL")
+
 
         for (const idx in dataArr) {
             var data = dataArr[idx];
@@ -51,26 +63,44 @@ function displayMedia(mediaType) {
             if (data["media_type"] !== "VIDEO") {
                 var div = document.createElement("div");
                 div.setAttribute("class", "ig-content");
+
+                var link = document.createElement("a");
+                link.setAttribute("href", imageURL);
+                link.setAttribute("target", "_blank");
             
                 var img = document.createElement("img");
                 img.setAttribute("src", data["media_url"])
-            
-                if (idx !== "0") div.style.display = "none";
+                
+                var desc = document.createElement("p");
+                desc.innerText = "Klik untuk informasi lebih lanjut";
 
-                div.append(img);
+                link.append(img);
+                link.append(desc);
+                div.append(link);
                 mediaDiv.append(div);
             }
         }
+
+        document.querySelector("#pagination").style.display="flex";
     } else if (mediaType === "IMAGE") {
-        var dataArr = getData("_MEDIA");
+        var data = getData("_MEDIA");
 
         var div = document.createElement("div");
-        div.setAttribute("id", `instagram`);
+        div.setAttribute("class", "ig-content");
+
+        var link = document.createElement("a");
+        link.setAttribute("href", imageURL);
+        link.setAttribute("target", "_blank");
 
         var img = document.createElement("img");
         img.setAttribute("src", data["media_url"])
 
-        img.append(div);
+        var desc = document.createElement("p");
+        desc.innerText = "Klik untuk informasi lebih lanjut";
+
+        link.append(img);
+        link.append(desc);
+        div.append(link);
         mediaDiv.append(div);
     }
 
@@ -86,5 +116,6 @@ document.querySelector("#inputBtn").addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM Loaded")
     displayIGMedia();
 });

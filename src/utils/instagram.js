@@ -10,7 +10,7 @@ function getURL(field, path) {
 }
 
 function fetchListMedia() {
-    // Ada tambahana field media_url
+    // Ada tambahan field media_url
     return fetchAPI(getURL('id,media_type,permalink,media_url', 'me/media'));
 }
 

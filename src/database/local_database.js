@@ -1,5 +1,17 @@
 var storage = window.sessionStorage;
 
+function itExists(key) {
+    return Boolean(getData(key));
+}
+
+function generateExpire(key) {
+    storeData(key, Date.now());
+}
+
+function itsExpire(key) {
+    
+}
+
 function getData(key) {
     var data = storage.getItem(key.toUpperCase());
     
@@ -23,4 +35,4 @@ function removeData(key) {
     storage.removeItem(key)
 }
 
-export { getData, storeData, removeData }
+export { getData, storeData, removeData, itExists, itsExpire, generateExpire }
