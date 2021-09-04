@@ -11,7 +11,7 @@ firebase.initializeApp({
     measurementId: "G-50B8KY0NX9"
 });
 
-firebase.database().useEmulator("localhost", 9000); // Development Purposes 
+//firebase.database().useEmulator("localhost", 9000); // Development Purposes 
 
 // User
 function read(id, eventType="value") {
@@ -22,8 +22,8 @@ function read(id, eventType="value") {
         } else {
             return false;
         }
-    }).catch(() => {
-        console.log("Something wrong!");
+    }).catch((e) => {
+        console.log(e);
     });
 
     return data;

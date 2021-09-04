@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html translate="no">
    <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1 shrink-to-fit=no">
+      <meta property="og:site_name" content="BlessedSoesclean">
+      <meta property="og:title" content="Blessed Soesclean | Official Website">
+      <meta property="og:description" content="Cek status pengerjaan sepatu anda tanpa ribet">
       <title>BlessedShoes</title>
    </head>
    <body style="background:#70AADC;text-rendering:optimizeSpeed;margin:0;">
@@ -45,21 +48,61 @@
              <p class="input-message">Cek status pengerjaan sepatu Anda, dengan memasukkan kode transaksi pada kotak diatas.</p>
            </div>
            <div id="board" style="position:relative;">
+            <div class="statusResponse" style="position: relative;display: none;"> <!-- Test this style later-->
+              <svg viewBox="0 0 166.2 75.2" style="width: 70%;height: fit-content;overflow: visible;top: 25%;left: 0;margin: 0 auto;right: 0;"><g fill="none" stroke="#000006" stroke-linejoin="round" stroke-width="3" style="width: inherit;height: inherit;stroke: white;"><path d="M149.4 121.7c-1.7-3.6-25-9.8-37.6-15.3-1.1-.5-21.4-8.6-21.9-9-2.6-2.3-10.2-2.2-10.2-6.6-.1-5.2 5.6-17.4 7-17.3 10 7.8 18.2 11.4 27.4 16.8 5.8 3.4 11.3 7 17.3 9.9 6.9 3.2 14 5.7 21.3 8 5.8 1.9 14.2 3.9 17.7 4.8 7.1 1.8 9.3.8 14.6 3.4 5.2 2.2 7.5 8.1 7.5 8.1 3.2 3 1.2 14.5-.4 16.8-.3.5-6.3 2.2-9.6 3-8.4 1.8-23.4 3.2-25.6 3.4-13.5 1.2-27 .7-40.6.3l-33.9-1-32.7-.7-10.7-.7s-4.5-.6-7.5-1.2c-.9-.1-3.5-.3-3.3-3.9.1-.8.1-3.6.4-6.3.3-2.2-.5-4.4 0-6.3.2-.4.8-.7.7-1.2a61.4 61.4 0 013.1-33.5c.6-2.2 2.5-5.5 4.3-5.5 2.3.1 23.8 18.5 43 3.2" transform="matrix(.99974 0 0 1.0005 -28 -73.4)"></path><path d="M28.6 127.9c49.3 3.1 94.3 4.5 142.7 1.8 16.3-1 19.6-3 19.6-3s2.2-1.2 1.3-2.8M30.4 99.8s12.4 10.8 28.1 12.5c9.6 1 20.7-3.9 31.4-15" transform="matrix(.99974 0 0 1.0005 -28 -73.4)"></path><path d="M132 131c9.8-10.3 22.4-10.2 32.8-11.6 3-.3 7.8-.8 9.6-1.3 8.6-2.3 6.6-3.2 6.6-3.2" transform="matrix(.99974 0 0 1.0005 -28 -73.4)"></path></g></svg>
+              <p id="statusMessage" style="color: white;font-weight: bold;font-size: large;border-bottom: 1px solid white;"></p>
+              <button id="detailStatus">DETAIL STATUS</button>
+              <div id="inprogress" style="display: none;"><svg id="brush" version="1.1" viewBox="0 0 512 263" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 512 512" style=" transform: rotate(22deg); height: auto; width: 25%; position: absolute; right: 20%; margin: auto;"><g transform="translate(0 -177)"><path d="m61.7 315-11.4 110h-30c-1.82-0.072-2.79-1.3-2.43-3.09l21.8-108-6.2-0.217-4.96-0.137-25.2 105c-2.68 10.7 5.86 21.7 17 21.6 44-0.326 426-0.293 472 0 11.1 0.071 19.7-10.8 17-21.6l-25.2-105c16.3-4.06 28.4-18.8 28.4-36.4v-63c0-20.7-16.8-37.5-37.5-37.5-207 0.87-206 0.253-428 0h-8.66c-20.7 0-37.5 16.8-37.5 37.5v63c0 17.6 12.1 32.3 28.4 36.4m69.5 111h-32.6l11.4-110h27.3zm41.9 0h-26.9l6.16-110h25.1zm42.8 0h-27.8l4.4-110h25.5zm43 0h-28l2.08-110h27.5zm44.1 0h-29.1l1.58-110h27.5v110zm15 0v-110h27.5l1.2 110h-28.7zm43.7 0-1.2-110h25.6l4.4 110zm43.8 0-4.4-110h26l5.28 110zm41.9 0-5.28-110h25.3l10.6 110zm80.1-3.09c0.361 1.8-0.61 3.02-2.43 3.09h-32l-10.6-110h19.1zm2.77-144c0 12.4-10.1 22.5-22.5 22.5h-437c-12.4 0-22.5-10.1-22.5-22.5v-63c0-12.4 10.1-22.5 22.5-22.5 153-0.115 286-0.0184 423 1e-3 0.015 0 0.031-2e-3 0.046-2e-3h13.9c12.4 0 22.5 10.1 22.5 22.5z"></path></g></svg></div>
+              <div id="done" style="display: none;"><svg id="shine" width="36.9mm" height="28.9mm" version="1.1" viewBox="0 0 36.9 28.9" xmlns="http://www.w3.org/2000/svg" style="position: absolute;width: 15%;left: 11%;height: auto;"><g transform="translate(318 -367)"><g transform="rotate(180 -296 384)"><g transform="rotate(-45 -295 379)"><path d="m-298 368s-4.46 9.38-15.3 6.84c2.16 1.32 4.05 3.08 5.37 5.2 0.785 1.26 1.16 2.78 1.36 4.25 0.269 1.97 0.149 3.97-0.23 5.96-0.0135 0.0697 1.5-2.44 2.49-3.46 1.86-1.9 4.45-3.11 6.85-3.51 1.17-0.184 4.74 0.164 6.14 0.265 0.418 0.0302-2.68-1.27-4.48-3.44-1.64-1.96-2.65-4.4-2.82-6.77-0.18-2.79 0.607-5.35 0.605-5.34"/><path d="m-283 381s0.349 6.91 7.66 8.12c-1.67 0.263-3.28 0.862-4.64 1.83-0.806 0.577-1.42 1.41-1.92 2.27-0.669 1.14-1.11 2.41-1.38 3.73-0.01 0.0462-0.302-1.88-0.647-2.77-0.661-1.64-1.95-3.05-3.32-3.91-0.675-0.413-2.96-1.11-3.85-1.41-0.265-0.0885 1.98-0.0993 3.64-0.974 1.51-0.787 2.76-2.03 3.47-3.44 0.824-1.67 0.992-3.45 0.991-3.44"/><path d="m-290 392s-5.22 4.55-11.2 0.123c0.969 1.38 1.66 2.96 1.9 4.61 0.144 0.981-0.0272 2-0.295 2.96-0.358 1.28-0.964 2.47-1.72 3.58-0.0266 0.039 1.57-1.09 2.44-1.46 1.64-0.664 3.55-0.718 5.12-0.322 0.766 0.199 2.86 1.36 3.68 1.79 0.248 0.13-1.3-1.49-1.82-3.29-0.485-1.64-0.455-3.39 0.0694-4.89 0.631-1.75 1.79-3.11 1.79-3.1"/></g></g></g></svg></div>
+              <p id="statusContact" style="color:white;text-align:center;">Ada pertanyaan? kontak <a href="https://api.whatsapp.com/send?phone=6287709855904" target="_blank" style="border-bottom: 1px solid white;">WhatsApp</a> kami.</p>
+            </div>
             <div class="content"></div>
              <div id="pagination" style="display:none;">
                 <p style="border-radius:20px;color:#fff;background: #000000b3;margin:0;padding:2px 10px;"><span id="currImg">1</span>/<span id="totImg">2</span></p>
              </div>
              <div class="board-title" style="top:0;">
               <p id="board-info" style="display: none;">TERBARU DARI @BLESSEDSHOESCLEAN_</p>
-              <p id="board-code" style="margin:-20px auto;font-size: x-large;display: none;">#AAA</p>
-           </div>
+              <p id="board-code" style="margin:-20px auto;font-size: x-large;display: none;font-style: normal">#AAA</p>
+            </div>
            </div>
          </div>
       </div>
+      <div class="popup-container hide">
+        <div class="popup-table">
+          <div class="popup-table-cell">
+            <div class="popup">
+              <div class="detailTitle"></div>
+              <div class="content">
+                <table class="rwd-table">
+                  <tr>
+                    <th>No</th>
+                    <th>Status</th>
+                    <th>Layanan</th>
+                    <th>Merk Sepatu</th>
+                    <th>Ukuran</th>
+                  </tr>
+                </table>
+              </div>
+              <div class="buttons">
+                <div class="button" id="ok">
+                  OK
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <template id="detailTable">
+        <td data-th="No" id="no"></td>
+        <td data-th="Status" id="status"></td>
+        <td data-th="Layanan" id="layanan"></td>
+        <td data-th="Merk" id="merk"></td>
+        <td data-th="Ukuran" id="ukuran"></td>
+      </template>
       <style>@import url('https://fonts.googleapis.com/css?family=Lato:400,700&display=swap');</style><link rel="stylesheet" href="index.css">
       <script src="./script/642.js"></script>
-      <script src="./script/99.js"></script>
       <script src="./script/database.js"></script>
+      <script src="./script/sharedApp.js"></script>
       <script src="script/main.js"></script>
    </body>
 </html>
