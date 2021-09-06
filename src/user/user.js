@@ -1,6 +1,6 @@
 "use strict";
 
-import {read} from "../database/database";
+import {insert, read} from "../database/database";
 import {getData, storeData, removeData, itsExpire, itExists} from "../database/local_database";
 import {fetchListMedia, fetchMediaByID, fetchAlbumByID} from "../utils/instagram";
 import {status_option_index} from "../admin/admin_const";
@@ -144,40 +144,60 @@ function clearTable() {
     }
 }
 
-var inputState = true;
-document.querySelector("#inputBtn").addEventListener("click", () => {
+function warnError() {
+    var warn1 = document.querySelector(".input-message");
+    var warn2 = document.querySelector(".flex-form");
+    
+    warn1.classList.add("input-error");
+    warn2.classList.add("input-error");
+
+    var x = setInterval(() => {
+        warn1.classList.remove("input-error");
+        warn2.classList.remove("input-error");
+        clearInterval(x);
+      }, 900);
+}
+
+function inputHandling() {
     var input = document.querySelector("#inputID").value.toUpperCase();
+    var errorMessage = `Kode transaksi "${input}" tidak ditemukan.`
 
     if (input.length === 3) {
-        clearTable();
         read(input).then((data) => {
             if (data) {
-                console.log(data);
+                document.querySelector(".input-message").innerText = "Cek status pengerjaan sepatu Anda, dengan memasukkan kode transaksi pada kotak diatas."
+                clearTable();
                 document.querySelector(".content").style.display = "none";
                 document.getElementById("board-info").style.display = "none";
                 document.getElementById("board-code").innerText = `#${input}`;
                 document.getElementById("board-code").style.display = "";
                 document.querySelector(".statusResponse").style.display = "";
-                document.querySelector(".popup .detailTitle").innerText = `#${input}`;
+                document.querySelector(".popuptitle").innerText = `#${input}`;
 
                 var isInProgress = false;
                 for (var idx in data) {
-                    var template = document.querySelector("#detailTable").content.cloneNode(true).children;
-                    var tr = document.createElement("tr");
+                    
+                    if (idx === "timestampIn") {
+                        var dates = new Date(data[idx]);
+                        document.querySelector("#tanggalTransaksi").innerText = `${dates.toLocaleDateString('id',{ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+                    } else {
+                        var template = document.querySelector("#detailTable").content.cloneNode(true).children;
+                        var tr = document.createElement("tr");
 
-                    template.no.innerText = (parseInt(idx)+1);
-                    tr.append(template.no);
-                    template.status.innerText = data[idx].Status;
-                    tr.append(template.status);
-                    template.layanan.innerText = data[idx].Service;
-                    tr.append(template.layanan);
-                    template.merk.innerText = data[idx].ShoesBrand;
-                    tr.append(template.merk);
-                    template.ukuran.innerText = data[idx].Size;
-                    tr.append(template.ukuran);
+                        template.no.innerText = (parseInt(idx)+1);
+                        tr.append(template.no);
+                        template.status.innerText = data[idx].Status;
+                        tr.append(template.status);
+                        template.layanan.innerText = data[idx].Service;
+                        tr.append(template.layanan);
+                        template.merk.innerText = data[idx].ShoesBrand;
+                        tr.append(template.merk);
+                        template.ukuran.innerText = data[idx].Size;
+                        tr.append(template.ukuran);
 
-                    if (status_option_index[data[idx].Status] === 0)  isInProgress = true;
-                    document.querySelector(".rwd-table>tbody").append(tr);
+                        if (status_option_index[data[idx].Status] === 0)  isInProgress = true;
+                        document.querySelector(".rwd-table>tbody").append(tr);
+                    }
                 }
 
                 if (isInProgress) {
@@ -197,23 +217,34 @@ document.querySelector("#inputBtn").addEventListener("click", () => {
                 document.querySelector('#ok').addEventListener('click', () => {
                     document.querySelector('.popup-container').classList.add('hide');
                 });
+
+                document.querySelector("#board").scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                })
             } else {
-                document.querySelector(".input-message").innerText = "Kode transaksi yang anda masukkan tidak ditemukan.";
-                inputState = false;
+                document.querySelector(".input-message").innerText = errorMessage;  
+                warnError();
             }
         })
     } else {
-        document.querySelector(".input-message").innerText = "Kode transaksi yang anda masukkan tidak ditemukan.";
-        inputState = false;
+        document.querySelector(".input-message").innerText = errorMessage;
+        warnError();
     }
-});
+}
 
-document.querySelector("#inputID").addEventListener("input", () => {
-    if (!inputState) {
-        document.querySelector(".input-message").innerText = "Cek status pengerjaan sepatu Anda, dengan memasukkan kode transaksi pada kotak diatas.";
-        inputState = true;
+document.querySelector("#inputBtn").addEventListener("click", () => { inputHandling() });
+document.querySelector("#inputID").addEventListener("keypress", (event) => { if (event.keyCode === 13 || event.which === 13) inputHandling(); });
+document.querySelector("#inputID").addEventListener("input", (e) => {
+    var insertText = document.querySelector("#inputID").value
+    var insertLength = insertText.length;
+    if (insertLength < 9) {
+
+        document.querySelector("#inputID").value = insertText.toUpperCase()
+    } else {
+        document.querySelector("#inputID") = insertText.slice(0, -1);
     }
-});
+})
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM Loaded");

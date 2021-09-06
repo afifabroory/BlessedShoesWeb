@@ -34,6 +34,8 @@ svg { fill: white; }
 
 .input-message {
   color: #fff;
+  min-height: 57px;
+  word-break: break-word;
 }
 
 i {
@@ -284,14 +286,14 @@ p.input-message {
   -webkit-appearance: none;
 }
 
-input[type="text"] {
+input[type="search"] {
   -ms-flex-preferred-size: 100%;
       flex-basis: 100%;
   font-size: 20px;
   text-align: center  ;
 }
 
-#brush { top: 11%; }
+#brush { top: 18%; }
 #shine { top: 13%}
 
 #detailStatus {
@@ -336,6 +338,7 @@ input[type="text"] {
     font-size: larger;
   }
 
+  #brush { top: 11%; }
   #shine { top: 5%}
 }
 
@@ -522,6 +525,13 @@ input[type="text"] {
 }
 
 /* POP UP AND TABLE */
+.detail > p {
+  margin-left: 29px;
+  margin-right: 29px;
+  margin-bottom: 0px;
+  font-weight: bold;
+}
+
 .popup-container a,
 .popup-container a:hover,
 .popup-container a:active,
@@ -557,7 +567,6 @@ input[type="text"] {
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.15);
   -webkit-transition: opacity 0.1s linear;
   transition: opacity 0.1s linear;
   overflow-y: hidden;
@@ -603,8 +612,6 @@ input[type="text"] {
   /* a regular height must be set here, or nothing works */
   max-height: 80vh;
   overflow-y: auto;
-  overflow: hidden;
-  padding: 48px 0 65px 0;
   background-color: #fafafa;
   border-radius: 2px;
   box-sizing: border-box;
@@ -613,8 +620,8 @@ input[type="text"] {
   box-shadow: 0 10px 40px 4px rgba(0, 0, 0, 0.3);
 }
 
-.popup .detailTitle {
-  position: absolute;
+.popup .popuptitle {
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
@@ -645,7 +652,6 @@ input[type="text"] {
   min-width: 200px;
   height: 100%;
   overflow: hidden;
-  overflow-y: auto;
   box-sizing: border-box;
   padding: 12px;
   -webkit-overflow-scrolling: touch;
@@ -662,8 +668,7 @@ input[type="text"] {
 }
 
 .popup-container .buttons {
-  padding: 8px 10px;
-  position: absolute;
+  position: sticky;
   bottom: 0;
   width: 100%;
   text-align: right;
@@ -753,8 +758,8 @@ input[type="text"] {
 
 @media (max-width: 480px) {
   .popup {
-    height: 100vh;
-    width: initial;
+    height: fit-content;
+    width: fit-content;
   }
 }
 
@@ -776,4 +781,34 @@ input[type="text"] {
 }
 .rwd-table th, .rwd-table td:before {
   color: #000;
+}
+
+@keyframes errorShake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.input-error {
+  animation: errorShake 0.8s ease;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
