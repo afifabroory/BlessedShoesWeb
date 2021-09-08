@@ -19,7 +19,7 @@ import {
   createDivEl,
   createBtnEl,
   createOptionEl
-} from '../utils/admin_utils'
+} from '../utils/elUtils'
 
 import {
   default_attrs,

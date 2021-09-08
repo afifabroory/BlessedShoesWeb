@@ -1,15 +1,25 @@
 var storage = window.sessionStorage;
 
+function itExists(key) {
+    return Boolean(getData(key));
+}
+
+function generateExpire(key) {
+    storeData(key, Date.now());
+}
+
+function itsExpire(key) {
+    
+}
+
 function getData(key) {
-    var data =  JSON.parse(storage.getItem(key.toUpperCase()))
-
-    //if (Array.isArray(data)) {
-    //    data = data.filter((el) => {
-    //        return el != null;
-    //    });
-    //}
-
-    return data;
+    var data = storage.getItem(key.toUpperCase());
+    
+    if (typeof(data) === "undefined") {
+        return null 
+    } else {
+        return JSON.parse(data);
+    }
 }
 
 function storeData(key, data) {
@@ -25,4 +35,4 @@ function removeData(key) {
     storage.removeItem(key)
 }
 
-export { getData, storeData, removeData }
+export { getData, storeData, removeData, itExists, itsExpire, generateExpire }

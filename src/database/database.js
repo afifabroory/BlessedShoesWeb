@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/database";
 import { storeData, removeData } from "./local_database"
-
+console.log("test");
 firebase.initializeApp({
     apiKey: "AIzaSyA4-PsDCaElqrk9i6CYpTglUtW5m6-7cVA",
     authDomain: "test-955e0.firebaseapp.com",
@@ -11,7 +11,7 @@ firebase.initializeApp({
     measurementId: "G-50B8KY0NX9"
 });
 
-firebase.database().useEmulator("localhost", 9000); // Development Purposes 
+//firebase.database().useEmulator("localhost", 9000); // Development Purposes 
 
 // User
 function read(id, eventType="value") {
@@ -22,8 +22,8 @@ function read(id, eventType="value") {
         } else {
             return false;
         }
-    }).catch(() => {
-        console.log("Something wrong!");
+    }).catch((e) => {
+        console.log(e);
     });
 
     return data;
