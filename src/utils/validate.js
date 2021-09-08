@@ -4,6 +4,10 @@ function is_intOnly(data) {
     return /^[0-9]*$/.test(data);
 }
 
+function is_alpnum(data) {
+    return /^[0-9A-Z]+$/.test(data)
+}
+
 function isValid_UpdateState() {
     var key = document.querySelector("#div-shoesID>#shoesID").value;
     var index = document.querySelector("#div-shoesNo>#shoesNo").selectedIndex;
@@ -45,4 +49,4 @@ function validateInsertData(data) {
     return data.ShoesBrand.length > 0 && data.Size.length > 0;
 }
 
-export { is_intOnly, isValid_InsertState, isValid_UpdateState, validateInsertData, isValid_StatusChange };
+export { is_intOnly, is_alpnum, isValid_InsertState, isValid_UpdateState, validateInsertData, isValid_StatusChange };
