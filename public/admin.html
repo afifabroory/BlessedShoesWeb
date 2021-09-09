@@ -1,24 +1,115 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset=utf-8 />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email/Password Authentication</title>
-  </head>
-  <body>
-    <div id="admin_login" hidden>
-      <label for="user">Username:</label>
-      <input id="user" type="text" autocomplete="off"><br>
-      <label for="password">Password:</label>
-      <input id="password" type="password" autocomplete="off"><br>
-      <input id="inputBtn" type="button" value="Login">
+   <head>
+      <meta charset=utf-8 />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Admin Page | Blessed Shoesclean</title>
+      <link href=popup.css rel=preload as=style onload='this.rel="stylesheet"'>
+      <link href=admin.css rel=preload as=style onload='this.rel="stylesheet"'>
+   </head>
+   <body class="align">
+    <div class=preload-page></div>
+    <div id=admin_login class="login" style="display: none;">
+       <header class="login__header">
+          <h2>Admin Login</h2>
+       </header>
+       <div class="login__div">
+          <div>
+             <label for="user">Username</label>
+             <input type="text" id="user" class=login-input autocapitalize="off" autocomplete="off">
+          </div>
+          <div>
+             <label for="password">Password</label>
+             <input type="password" id="password" class=login-input autocapitalize="off" autocomplete="off">
+          </div>
+          <div>
+             <input id=inputBtn class="login-button login-input" type=button value="Login">
+          </div>
+       </div>
     </div>
-  </body>
-  <script src="script/sharedApp.js"></script>
-  <script src="script/641.js"></script>
-  <script src="script/admin.js"></script>
-  <script src="script/642.js"></script>
-  <script src="script/database.js"></script>
-  <script src="script/397.js"></script>
-  <script src="script/login.js"></script>
+    <div>
+       <ul id=display></ul>
+    </div>
+    <div class="popup-container" style=display:none>
+      <div class=popup-table>
+         <div class=popup-table-cell>
+            <div class=popup>
+               <div class=popuptitle style=font-weight:700>Insert Data</div>
+               <div class=content>
+                  
+               </div>
+               <div class=popup-buttons>
+                  <div class=popup-button id=save style=color:#009688>INSERT</div>
+                  <div class=popup-button id=cancel style=color:#960000>CANCEL</div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <template id=treeTemplate>
+      <li>
+         <div><tri class=tree-icon></tri></div>
+      </li>
+   </template>
+   <template id=treeContent>
+      <span>
+         <span></span>
+         <button>Update</button>
+         <button>Delete</button>
+      </span>
+   </template>
+   <template id=childContent>
+      <span>
+         <span></span>
+         <button>Delete</button>
+      </span>
+   </template>
+   <template id=insertUpdateTemplate>
+      <table id="input">
+         <tbody>
+           <tr id="div-shoesID">
+             <td for="shoesID">ID</td>
+             <td><input id="shoesID" type="text" autocomplete="off" maxlength="3" disabled="" style=width:100%></td>
+           </tr>
+           <tr id="div-shoesNo">
+             <td for="shoesNo">No</td>
+             <td><input id="shoesNo" type="text" autocomplete="off" value="1" disabled="" style=width:100%></td>
+           </tr>
+           <tr id="div-shoesBrand">
+             <td>Shoes Brand</td>
+             <td><input id="shoesBrand" type="text" autocomplete="off" style=width:100%></trd>
+           </tr>
+           <tr id="div-shoesSize">
+             <td>Shoes Size</td>
+             <td><input id="shoesSize" type="text" autocomplete="off" pattern="\d*" maxlength="3" style=width:100%></td>
+           </tr>
+           <tr id="div-shoesService">
+             <td>Service</td>
+             <td><select id="shoesService" style=width:100%><option value="Deep Clean">Deep Clean</option><option value="Fast Clean">Fast clean</option><option value="Whitening Treatment">Whitening Treatment</option><option value="Repaint">Repaint</option><option value="Reglue">Reglue</option></select></td>
+           </tr>
+           <tr id="div-shoesStatus">
+             <td>Status</td>
+             <td><select id="shoesStatus" style=width:100%><option value="In Progress">In Progress</option><option value="Done">Done</option><option value="Canceled">Canceled</option></select></td>
+           </tr>
+         </tbody>
+      </table>
+      <div style=display:flex;justify-content:space-between;margin-top:10px;>
+         <button>BACK</button>
+         <button id="addBtn" class="plus-button plus-button--small" disabled=""></button>
+         <button>NEXT</button>
+      </div>   
+   
+   </template>   
+   <template id="deleteTemplate">
+      <table class="rwd-table">
+         <tbody></tbody>
+      </table>
+   </template>
+   </body>
+   <style>.rwd-table{margin:auto;min-width:300px}.rwd-table tr{border-top:1px solid #ddd;border-bottom:1px solid #ddd}.rwd-table th{display:none}.rwd-table td{display:block}.rwd-table td:first-child{padding-top:.5em}.rwd-table td:last-child{padding-bottom:.5em}.rwd-table td:before{content:attr(data-th) ": ";font-weight:700;width:6.5em;display:inline-block}@media (min-width:480px){.rwd-table td:before{display:none}}.rwd-table td,.rwd-table th{text-align:left}@media (min-width:480px){.rwd-table td,.rwd-table th{display:table-cell;padding:.25em .5em}.rwd-table td:first-child,.rwd-table th:first-child{padding-left:0}.rwd-table td:last-child,.rwd-table th:last-child{padding-right:0}}@media (max-width:480px){.popup{height:fit-content;width:fit-content}}.rwd-table{color:#000;border-radius:.4em;overflow:hidden}.rwd-table tr{border-color:#000}.rwd-table td,.rwd-table th{margin:.5em 1em}@media (min-width:480px){.rwd-table td,.rwd-table th{padding:1em!important}}.rwd-table td:before,.rwd-table th{color:#000}@keyframes errorShake{10%,90%{transform:translate3d(-1px,0,0)}20%,80%{transform:translate3d(2px,0,0)}30%,50%,70%{transform:translate3d(-4px,0,0)}40%,60%{transform:translate3d(4px,0,0)}}.input-error{animation:errorShake .8s ease;transform:translate3d(0,0,0);backface-visibility:hidden;perspective:1000px}</style>
+   <script src="script/sharedApp.js"></script>
+   <script src="script/642.js"></script>
+   <script src="script/database.js"></script>
+   <script src="script/397.js"></script>
+   <script src="script/login.js"></script>
 </html>

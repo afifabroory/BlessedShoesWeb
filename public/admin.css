@@ -1,0 +1,164 @@
+/* ---------- GENERAL ---------- */
+* {
+    box-sizing: inherit;
+    }
+    html {
+    box-sizing: border-box;
+    }
+    body {
+    font-family: 'Lato', sans-serif;
+    line-height: 1.5;
+    margin: 0;
+    min-block-size: 100vh;
+    padding: 5vmin;
+    }
+    h2 {
+    font-size: 1.75rem;
+    }
+    .login-input {
+    background-image: none;
+    border: none;
+    font: inherit;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s;
+    }
+    svg {
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+    }
+    /* ---------- ALIGN ---------- */
+    .align {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+    /* ---------- BUTTON ---------- */
+    .login-button {
+    background-color: #33cc77;
+    color: #fff;
+    padding: 0.25em 1.5em;
+    }
+    .login-button:focus,
+    .login-button:hover {
+    background-color: #28ad63;
+    }
+    /* ---------- ICONS ---------- */
+    .icons {
+    display: none;
+    }
+    .icon {
+    fill: currentcolor;
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    }
+    /* ---------- LOGIN ---------- */
+    .login {
+    width: 400px;
+    box-shadow: 0 0 20px 2px grey;
+    border-top-left-radius: 1.25em;
+    border-bottom-left-radius: 1.25em;
+    border-top-right-radius: 1.25em;
+    border-bottom-right-radius: 1.25em;  
+    }
+    .login__header {
+    background-color: #f95252;
+    border-top-left-radius: 1.25em;
+    border-top-right-radius: 1.25em;
+    color: #fff;
+    padding: 1.25em 1.625em;
+    }
+    .login__header :first-child {
+    margin-top: 0;
+    }
+    .login__header :last-child {
+    margin-bottom: 0;
+    }
+    .login h2 .icon {
+    margin-right: 14px;
+    }
+    .login__div {
+    background-color: #fff;
+    border-bottom-left-radius: 1.25em;
+    border-bottom-right-radius: 1.25em;
+    color: #777;
+    display: grid;
+    gap: 0.875em;
+    padding: 1.25em 1.625em;
+    }
+    .login input {
+    border-radius: 0.1875em;
+    }
+    .login input[type="text"],
+    .login input[type="password"] {
+    background-color: #eee;
+    color: #777;
+    padding: 0.25em 0.625em;
+    width: 100%;
+    }
+    .login input[type="button"] {
+    display: block;
+    margin: 0 auto;
+    }
+    .preload-page{font-size:10px;text-indent:-9999em;border-top:2px solid #3b3b3c;border-right:2px solid #3b3b3c;border-bottom:2px solid #fff;border-left:2px solid #fff;border-radius:100%;width:30px;height:30px;border-top-color:#3b3b3c;border-left-color:#3b3b3c;position:absolute;top:50%;left:50%;transform:translateY(-50%);-webkit-animation:load .5s infinite linear;animation:load .5s infinite linear}@-webkit-keyframes load{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes load{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}
+
+    /* READ DATA AND DELETE DATA */
+    ul {
+        margin: 0;
+        padding: 0;
+       }
+  
+       li {
+        list-style-type: none;
+        font-size: 15px;
+        font-weight: bold;
+        margin: 0;
+        padding: 0;
+        margin-left: 30px;
+        background-repeat: repeat-y;
+        background-position: -99px 0;
+        background-color: transparent;
+        background-image: url("//www.gstatic.com/mobilesdk/151023_mobilesdk/images/firebase-data-tree-sprites.png");
+       }
+  
+       li:last-child {
+         background: transparent;
+       }
+  
+       li > div {
+        display: flex;
+        align-items: center;
+       }
+  
+       li > div > span {
+         margin-left: 5px;
+       }
+  
+       .tree-icon {
+          background-color: transparent;
+          background-image: url("//www.gstatic.com/mobilesdk/151023_mobilesdk/images/firebase-data-tree-sprites.png");
+          background-repeat: no-repeat;
+       }
+  
+       .opened {
+        background-position: 0 0;
+       }
+  
+       .closed {
+        background-position: -33px 0;
+       }
+  
+       .leaf {
+        background-position: -66px 0;
+       }
+  
+       tri {
+         width: 24px;
+         display: inline-block;
+         height: 28px;
+         margin: 0;
+         padding: 0;
+         display: inline-block;
+       }
