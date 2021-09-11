@@ -1,8 +1,6 @@
- import {
-  read,
+import {
   insert,
-  update,
-  remove,
+  adminRead,
   ServerValue
 } from "../database/database";
 
@@ -12,586 +10,338 @@ import {
   removeData
 } from "../database/local_database"
 
-// import {
-//   createInputEl, 
-//   createSelectEl,
-//   createCheckEl,
-//   createDivEl,
-//   createBtnEl,
-//   createOptionEl
-// } from '../utils/elUtils'
+// TODO:
+// 1. Enabled add button when certain condition meet to enabled of disabled add button.
+// 2. Also develop next and back button for exsisting data, 
+//    if user already click add button but doesn't input data then ignore data.
+//    also  if user already input data then ask user to click add button to save data.
+//    BACK button are active when user click NEXT button. NEXT button are disabled when no more data.
+// 3. If user already input data but doesn't insert data to database but click CANCEL button, then
+//    tell user data are not stored to database. If user click yes then discard data if user click
+//    no then back to popup.
+// 4. Create new feature to clear data fast also create feature to generate new ID.
+// 5. Create procedure to make sure ID are not exist in database.
+// 6. Create new row element after input to send message something wrong to user.
+// 7. Create success popup after user click insert button.
+// 8. Add data to display data.
+// 9. Filter display data to show only In Progress data.
+// 10. Sort data by TIMESTAMP to display data. Using FIFO principle which is first item are in upper.
+// 11. Input condtion handling (e.g. empty input, wrong input, etc.)
 
-// import {
-//   default_attrs,
-//   update_attrs,
-//   delete_attrs,
-//   status_option_index
-// } from './admin_const'
+function generateID(length = 3) {
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const BANNED_ID = ["SEX", "ASS", "CUM", "GAY", "S3X", "GOD", "XXX", "TIT", "A55"];
+  var result = '';
 
-// import { 
-//   showUpdate,
-//   showDelete, 
-//   clearInsert,
-//   clearUpdate,
-//   clearDelete,
-//   update_state_listener, 
-//   insert_state_listener,
-//   insertBtn_disabled,
-//   updateBtn_disabled,
-//   toggle_update,
-//   toggle_delete
-// } from "../utils/admin_data"
+  while (true) {
+      for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
 
-// import {
-//   validateInsertData
-// } from "../utils/validate"
-// import e from "cors"; // WTF is this?
+      if (!BANNED_ID.includes(result)) break;
+  }
 
-// var dbOpState;
-// const insertBefore = (parent, newEl, el) => parent.insertBefore(newEl, el);
+  storeData("ID", JSON.stringify(result));
+  return result;
+}
 
-// function randomID(length=3) {
-//   const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-//   var result = '';
+function getParentOfDepth(n, element) {
+  for (var i = 0; i < n; i++) element = element.parentNode;
+  return element;
+}
 
-//   for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+function getInputData() {
+  /**
+   * ID as a Key
+   * Fromat data example:
+   * AAA : {
+   *  [
+   *    {Service: -, Shoesbrand: -, Size: -, Status: - },
+   *    {Service: -, Shoesbrand: -, Size: -, Status: - }
+   *  ]
+   * }
+   */
+  var data = {};
+  data["Service"] = document.querySelector("#shoesBrand>td>#shoesBrand").value;
+  data["ShoesBrand"] = document.querySelector("#shoesSize>td>#shoesSize").value;
+  data["Size"] = document.querySelector("#shoesService>td>#shoesService").value;
+  data["Status"] = document.querySelector("#shoesStatus>td>#shoesStatus").value;
+  return data;
+}
 
-//   return result;
-// }
+function clearInputData() {
+  document.querySelector("#shoesNo>td>#shoesNo").value = "1";
+  document.querySelector("#shoesBrand>td>#shoesBrand").value = "";
+  document.querySelector("#shoesSize>td>#shoesSize").value = "";
+  document.querySelector("#shoesService>td>#shoesService").children[0].selected = true
+  document.querySelector("#shoesStatus>td>#shoesStatus").children[0].selected = true;
+}
 
-// function initOperationListener() {
-//   document.querySelector("#dbOp").addEventListener("change", () => {
-//     var currentState = document.querySelector("#dbOp").value;
-//     if (dbOpState !== currentState) {
-//       var option = parseInt(document.querySelector("#dbOp").value);
-//       switch(option) {
-//         case 0:
-//           document.querySelector("div").remove();
-//           defaultAdmin(false);
-//           initBtnListener_Insert();
-//           insert_state_listener();
-//           break;
-//         case 1:
-//           updateAdmin();
-//           init_idChange(showUpdate);
-//           init_noChange(showUpdate);
-//           update_state_listener(); // TODO: Update To All Status Checkbox should, enable when status is changed.
-//           initBtnListener_Update();
-//           break;
-//         case 2:
-//           TODO: 
-//           "Delete This Transanction" should change to more clearer meaning. 
-//           deleteAdmin();
-//           init_idChange(showDelete);
-//           init_noChange(showDelete);
-//           initBtnListener_Delete();
-//           break;
-//       }
-//       dbOpState = currentState;
-//       initOperationListener();
-//     }
-//   })
-// }
+function insertOnClick() {
+  // Insert data to database button
+  var dataLocal = getData("CURRENT_DATA");
+  if (!dataLocal) {
+      dataLocal = {};
+      dataLocal[0] = getInputData();
+      dataLocal["timestampIn"] = ServerValue.TIMESTAMP;
+      dataLocal["timestampOut"] = 0;
+  }
 
-// This function is used in update and delete operation
-// function init_idChange(fn) {
-//   var shoesID = document.querySelector("#shoesID");
-  
-//   shoesID.addEventListener("input", () => {
-//       var key = document.querySelector("#shoesID").value.toUpperCase();
+  var id = document.querySelector("#shoesID>td>#shoesID").value;
+  insert(id, dataLocal);
+  clearInputData();
+  document.querySelector("#shoesID>td>#shoesID").value = generateID(); // Regenerate ID
+  if (getData("CURRENT_DATA")) removeData("CURRENT_DATA");
+}
 
-//       var data = getData(key);
-//       if (key.length === 3) {
-//         if (!data) {
-//           read(key).then((dataDB) => {
-//               if (dataDB) {
-//               /**
-//                * Case when data didn't found in localStorage.
-//                * But, found in database
-//                */
-//               storeData(key, JSON.stringify(dataDB));
-//               fn(dataDB);
-//             } else {
-//               fn(false);
-//             }
-//           })
-//         } else {
-//           fn(data); // Case when data found in localStorage
-//         }
-//       } else {
-//         fn(false);
-//       }
-//   });
-// }
+function addOnClick() {
+  // Add data more than one.
+  // If "CURRENT_DATA" already exits in sessionStorage that's mean data are not stored.
 
-// function init_noChange(fn) {
-//   var shoesID = document.querySelector("#shoesID");
-//   var shoesNo = document.querySelector("#div-shoesNo>#shoesNo");
+  var dataLocal = getData("CURRENT_DATA");
+  if (dataLocal) {
+      // If CURRENT_DATA already exists.
+      var dataLength = -2;
+      for (var key in dataLocal) dataLength++;
+      dataLocal[dataLength] = getInputData();
+  } else {
+      dataLocal = {};
+      dataLocal[0] = getInputData();
+      dataLocal["timestampIn"] = ServerValue.TIMESTAMP;
+      dataLocal["timestampOut"] = 0;
+  }
+  var nextNo = parseInt(document.querySelector("#shoesNo>td>#shoesNo").value) + 1;
+  storeData("CURRENT_DATA", JSON.stringify(dataLocal));
+  clearInputData();
+  document.querySelector("#shoesNo>td>#shoesNo").value = nextNo;
+}
 
-//   shoesNo.addEventListener("change", () => {
-//     var key = shoesID.value;
-//     fn(getData(key), false);
-//   });
-// }
+function inputHandler() {
 
-// function get_InsertInput() {
-//   var shoesBrand = document.querySelector("#div-shoesBrand>#shoesBrand").value;
-//   var shoesSize = document.querySelector("#div-shoesSize>#shoesSize").value;
-//   var service = document.querySelector("#div-shoesService>#shoesService").value;
-//   var status = document.querySelector("#div-shoesStatus>#shoesStatus").value;
-  
-//   return {
-//     Service: service, 
-//     ShoesBrand: shoesBrand, 
-//     Size: shoesSize, 
-//     Status: status
-//   }
-// }
+  document.querySelector("#insertBtn").addEventListener("click", () => {
 
-// function get_UpdateInput() {
-//   var shoesBrand = document.querySelector("#div-shoesBrand>#shoesBrand").value;
-//   var shoesSize = document.querySelector("#div-shoesSize>#shoesSize").value;
-//   var service = document.querySelector("#div-shoesService>#shoesService").value;
-//   var status = document.querySelector("#div-shoesStatus>#shoesStatus").value;
-  
-//   return {
-//     Service: service, 
-//     ShoesBrand: shoesBrand, 
-//     Size: shoesSize, 
-//     Status: status
-//   }
-// }
+      /* Popup part */
+      if (document.querySelector(".popup>.content>div")) document.querySelector(".popup>.content>div").remove(); // Clear popup content
+      document.querySelector(".popup>.popuptitle").innerText = "Insert Data";
+      document.querySelector("#insertupdate").innerText = "INSERT";
+      document.querySelector(".popup>.popup-buttons>#cancel").addEventListener("click", () => {
+          // Cancel data
+          document.querySelector(".popup-container").style.display = "none";
+          document.querySelector("#insertupdate").removeEventListener("click", insertOnClick);
+          document.querySelector("#addBtn").removeEventListener("click", addOnClick);
+      })
 
-// function initBtnListener_Insert() {
-//   var btn = document.querySelector("#div-Btn");
-  
-//   Add btn (DO: Save data unti; user click Post)
-//   btn.children.addBtn.addEventListener("click", () => {
-//     var shoesNo = parseInt(document.querySelector("#div-shoesNo>#shoesNo").value) + 1;
-//     document.querySelector("#div-shoesNo>#shoesNo").value = shoesNo;
+      /* Template part */
+      var template = document.querySelector("#insertUpdateTemplate").content.cloneNode(true).children[0];
+      template.children[1].children[0].addEventListener("click", () => {
+          // back
+      })
+      template.children[1].children[1].addEventListener("click", () => {
+          // add data
+      })
+      template.children[1].children[2].addEventListener("click", () => {
+          // next
+      })
+      template.children[0].children[0].children[0].children[1].children[0].value = getData("ID"); // ID input
+      template.children[0].children[0].children[2].children[1].children[0].addEventListener("input", () => {
+          // Shoes brand input
 
-//     var ID = document.querySelector("#div-shoesID>#shoesID").value;
-//     var data = getData(ID);
+      })
+      template.children[0].children[0].children[3].children[1].children[0].addEventListener("input", (e) => {
+          // Shoes size input
+          import("../utils/validate").then(valid => {
+              var shoesSize = document.querySelector("#insertUpdate>#input>tbody>#shoesSize>td:last-child>input").value
 
-//     if (!data) {
-//       storeData(ID, JSON.stringify([]))
-//       data = getData(ID);
-//     }
-    
-//     data.push(get_InsertInput());
-    
-//     console.log(data);
-//     var index = status_option_index[data[data.length-1].Status];
-//     if (index === 1) {
-//       Case when status are Done
-//       data[data.length-1].TimestampOut = ServerValue.TIMESTAMP;
-//     }
+              if (shoesSize.length === 4) {
+                  shoesSize = shoesSize.slice(0, -1);
+              } else if (shoesSize.length > 4) {
+                  shoesSize = "";
+              }
 
-//     storeData(ID, JSON.stringify(data));
+              if (!valid.is_intOnly(shoesSize)) {
+                  console.log("I AM Inside")
+                  shoesSize = shoesSize.slice(0, -1);
+              }
 
-//     clearInsert();
-//     btn.children.addBtn.disabled = true;
-//     btn.children.cancelBtn.disabled = false;
-//   })
+              document.querySelector("#insertUpdate>#input>tbody>#shoesSize>td:last-child>input").value = shoesSize; // Update content
+          })
+      })
+      template.children[0].children[0].children[4].children[1].children[0].addEventListener("input", () => {
+          // Shoes service input
 
-//   Insert Btn (DO: Post to database)
-//   btn.children.insertBtn.addEventListener("click", () => {
-//     var ID = document.querySelector("#div-shoesID>#shoesID").value;
-//     var data = getData(ID);
-//     console.log(data);
+      })
+      template.children[0].children[0].children[5].children[1].children[0].addEventListener("input", () => {
+          // Shoes status input
 
-//     var newData = get_InsertInput();
+      })
 
-//     var index = status_option_index[newData.Status];
-    
-//     Case when status are Done
-//     if (index === 1) newData.TimestampOut = ServerValue.TIMESTAMP;
+      document.querySelector(".popup>.content").appendChild(template);
+      document.querySelector(".popup-container").style.display = "";
 
-//     if (validateInsertData(newData)) {
-//       if (!data) {
-//         Case when admin only input 1 shoes
-//         newData = [newData];
-//         newData["timestampIn"] = ServerValue.TIMESTAMP;
-//         newData["timestampOut"] = 0;
+      document.querySelector("#insertupdate").addEventListener("click", insertOnClick);
+      document.querySelector("#addBtn").addEventListener("click", addOnClick);
+  })
+}
 
-//         insert(ID, newData);
-//       } else {
-//         Case when admin input more than 1 shoes
-//         data.push(newData); // Get user input when user didn't click add btn
-//         data["timestampIn"] = ServerValue.TIMESTAMP;
-//         data["timestampOut"] = 0;
-//         insert(ID, data); // COMMENT ID: 1
-//       }
-//     } else {
-//       COMMENT ID: 1
-//       data["timestampIn"] = ServerValue.TIMESTAMP;
-//       data["timestampOut"] = 0;
-//       insert(ID, data); // If user already click add btn and then, click insert btn with empty input
-//     }
+function updateHandler() {
+  /* Popup part */
+  document.querySelector(".popup>.popuptitle").innerText = "Update Data";
+  document.querySelector(".popup>.popup-buttons>#insertupdate").innerText = "UPDATE";
 
-//     You may wondering, why at code section at comment #1 are not store data to localStorage.
-//     Simply it's because we already store to localStorage when user click add btn.
+  /* Template part */
+  var template = document.querySelector("#insertUpdateTemplate").content.cloneNode(true);
+  template.children[1].children[1].remove();
+}
 
-//     clearInsert()
+function deleteHandler() {
 
-//     Clear new
-//     storeData("ID", JSON.stringify(randomID()));
-//     document.querySelector("#div-shoesID>#shoesID").value = getData("ID");
-//     document.querySelector("#div-shoesNo>#shoesNo").value = 1;
+}
 
-//     btn.children.addBtn.disabled = true;
-//     btn.children.insertBtn.disabled = true;
-//     btn.children.cancelBtn.disabled = true;
-//     btn.children.insertBtn.innerText = "INSERT"
-//   });
+function displayData(data, prepend = false) {
 
-//   btn.children.cancelBtn.addEventListener("click", () => {
-//     var ID = document.querySelector("#div-shoesID>#shoesID").value;
-//     document.querySelector("#div-shoesNo>#shoesNo").value = 1;
-//     removeData(ID);
-//     clearInsert();
-//     insertBtn_disabled(true);
-//   })
-// }
-
-// function initBtnListener_Update() {
-//   document.querySelector("#div-Btn>#updateBtn").addEventListener("click", () => {
-//     var ID = document.querySelector("#div-shoesID>#shoesID").value;
-//     var i = parseInt(document.querySelector("#div-shoesNo>#shoesNo").value);
-
-//     var data = getData(ID);
-//     data = data.filter((el) => { return el != null });
-    
-//     var newData = get_UpdateInput();
-
-//     var updateTimeStamp = (data, newData, i) => {
-//       var index = status_option_index[newData.Status];
-//       if (index === 1) {
-//         Case when status are Done
-//         data[i].TimestampOut = ServerValue.TIMESTAMP;
-//       } else {
-//         data[i].TimestampOut = 0;
-//       }
-//     }
-
-//     var changeAll = document.querySelector("#div-updateStatus>#updateStatus").checked;
-//     if (changeAll) {
-//       for (var l = 0; l < data.length; ++l) {
-//         data[l].Status = newData.Status;
-//         updateTimeStamp(data, newData, l);
-//       }
-//     } else {
-//       data[i].Status = newData.Status;
-//       updateTimeStamp(data, newData, i);
-//     }
-
-//     data[i].Service = newData.Service
-//     data[i].ShoesBrand = newData.ShoesBrand
-//     data[i].Size = newData.Size
-    
-//     update(ID, data);
-//     clearUpdate();
-//     toggle_update();
-//     updateBtn_disabled(true);
-//     document.querySelector("#div-shoesID>#shoesID").value = "";
-//     document.querySelector("#div-updateStatus>#updateStatus").disabled = true;
-//   });
-// }
-
-// function initBtnListener_Delete() {
-//   document.querySelector("#div-Btn>#deleteBtn").addEventListener("click", () => {
-//     var ID = document.querySelector("#div-shoesID>#shoesID").value;
-
-//     var deleteAll = document.querySelector("#div-deleteAllCheck>#deleteAllCheck").checked
-//     if (deleteAll) {
-//       remove(ID);
-//     } else {
-//       var i = parseInt(document.querySelector("#div-shoesNo>#shoesNo").value);
-//       remove(`${ID.toUpperCase()}/${i}`)
-//     }
-
-//     var select = document.querySelector("#div-shoesNo>#shoesNo");
-//     createOptionEl(select, [0], true, "")
-//     document.querySelector("#div-shoesID>#shoesID").value = "";
-
-//     clearDelete();
-//     toggle_delete();
-//   });
-// }
-
-function displayData(data) {
-  
   // Node-1
   for (var childKey in data) {
-    var tree = document.querySelector("#treeTemplate").content.cloneNode(true).children[0];
-    
-    // Node-1 Icon
-    tree.children[0].children[0].classList.add("closed");
-    tree.children[0].children[0].addEventListener("click", (e) => {
-      var displayState = Boolean(e.path[2].children[1].style.display);          
-      console.log(e.path[2].children[1]);
-      console.log(displayState)
-      if (!displayState) {
-        e.path[2].children[1].style.display = "none";
+      var tree = document.querySelector("#treeTemplate").content.cloneNode(true).children[0];
 
-        var elementCount = e.path[2].children[1].childElementCount-2;
-        for (var idx = 0; idx < elementCount; idx++) {
-          e.path[2].children[1].children[idx].children[0].children[0].classList.remove("opened");
-          e.path[2].children[1].children[idx].children[0].children[0].classList.add("closed");
-          e.path[2].children[1].children[idx].children[1].style.display = "none"
-          console.log(e.path[2].children[1].children)
-        }
-      } else {
-        e.path[2].children[1].style.display = "";
-      }
+      // Node-1 Icon
+      tree.children[0].children[0].classList.add("closed");
+      tree.children[0].children[0].addEventListener("click", (e) => {
+          console.log(e);
 
-      var currentState = e.target.classList[1];
-    
-      if (currentState === "closed") {
-        e.target.classList.remove("closed");
-        e.target.classList.add("opened");
-      } else if (currentState === "opened") {
-        e.target.classList.remove("opened");
-        e.target.classList.add("closed");
-      } else {
-        console.log("[Error]: No class state.")
-      }
-    });
-    
-    // Header content
-    var contents = document.querySelector("#treeContent").content.cloneNode(true);
-    contents.children[0].children[0].innerText = childKey;
-    tree.children[0].appendChild(contents);
+          var displayState = Boolean(getParentOfDepth(2, e.target).children[1].style.display);
 
-    var ulInner = document.createElement("ul");
-
-    // Node-2
-    var dataChild = data[childKey];
-    for (var childKey2 in dataChild) {
-
-      var treeChild = document.querySelector("#treeTemplate").content.cloneNode(true).children[0];
-      var treeChildContent = treeChild.children[0];
-      var content = document.querySelector("#childContent").content.cloneNode(true);
-
-      if (childKey2 === "timestampIn") {
-        treeChildContent.children[0].classList.add("leaf");
-        content.children[0].children[0].innerText = `Entry date: ${dataChild[childKey2]}`
-        content.children[0].children[1].remove()
-      } else if(childKey2 === "timestampOut") {
-        treeChildContent.children[0].classList.add("leaf");
-        content.children[0].children[0].innerText =`Done date: ${dataChild[childKey2]}`
-        content.children[0].children[1].remove()
-      } else {
-        treeChildContent.children[0].addEventListener("click", (e) => {
-          var displayState = Boolean(e.path[2].children[1].style.display);
-          
           if (!displayState) {
-            e.path[2].children[1].style.display = "none";
+              getParentOfDepth(2, e.target).children[1].style.display = "none";
+
+              var elementCount = getParentOfDepth(2, e.target).children[1].childElementCount - 2;
+              for (var idx = 0; idx < elementCount; idx++) {
+                  getParentOfDepth(2, e.target).children[1].children[idx].children[0].children[0].classList.remove("opened");
+                  getParentOfDepth(2, e.target).children[1].children[idx].children[0].children[0].classList.add("closed");
+                  getParentOfDepth(2, e.target).children[1].children[idx].children[1].style.display = "none"
+              }
           } else {
-            e.path[2].children[1].style.display = "";
+              getParentOfDepth(2, e.target).children[1].style.display = "";
           }
-          
+
           var currentState = e.target.classList[1];
 
           if (currentState === "closed") {
-            e.target.classList.remove("closed");
-            e.target.classList.add("opened");
+              e.target.classList.remove("closed");
+              e.target.classList.add("opened");
+          } else if (currentState === "opened") {
+              e.target.classList.remove("opened");
+              e.target.classList.add("closed");
           } else {
-            e.target.classList.remove("opened");
-            e.target.classList.add("closed");
+              console.log("[Error]: No class state.")
           }
-        });
-        treeChildContent.children[0].classList.add("closed");
-        content = document.querySelector("#childContent").content.cloneNode(true);               
-        content.children[0].children[0].innerText = parseInt(childKey2)+1;
+      });
 
-        // Node-3
-        var ulInner2 = document.createElement("ul");
-        var dataChildMeta = dataChild[childKey2];
-        for (var childKey3 in dataChildMeta) {
-          var treeDataChild = document.querySelector("#treeTemplate").content.cloneNode(true).children[0];
-          var treeDataContent = treeDataChild.children[0];
-        
-          treeDataContent.children[0].classList.add("leaf");
-          
-          var contents = document.createElement("span");
-          contents.innerText = `${childKey3}: ${dataChildMeta[childKey3]}`;
-        
-          treeDataContent.appendChild(contents);
-          ulInner2.appendChild(treeDataChild);
-          ulInner2.style.display = "none";
-        }
-        
-        treeChild.appendChild(ulInner2);
+      // Header content
+      var contents = document.querySelector("#treeContent").content.cloneNode(true);
+      contents.children[0].children[0].innerText = childKey;
+      tree.children[0].appendChild(contents);
+
+      var ulInner = document.createElement("ul");
+
+      // Node-2
+      var dataChild = data[childKey];
+      for (var childKey2 in dataChild) {
+
+          var treeChild = document.querySelector("#treeTemplate").content.cloneNode(true).children[0];
+          var treeChildContent = treeChild.children[0];
+          var content = document.querySelector("#childContent").content.cloneNode(true);
+
+          if (childKey2 === "timestampIn") {
+              treeChildContent.children[0].classList.add("leaf");
+              content.children[0].children[0].innerText = `Entry date: ${new Date(dataChild[childKey2]).toLocaleDateString('id',{ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`
+              content.children[0].children[1].remove()
+          } else if (childKey2 === "timestampOut") {
+              treeChildContent.children[0].classList.add("leaf");
+              content.children[0].children[0].innerText = `Done date: ${dataChild[childKey2]}`
+              content.children[0].children[1].remove()
+          } else {
+              treeChildContent.children[0].addEventListener("click", (e) => {
+                  var displayState = Boolean(getParentOfDepth(2, e.target).children[1].style.display);
+
+                  if (!displayState) {
+                      getParentOfDepth(2, e.target).children[1].style.display = "none";
+                  } else {
+                      getParentOfDepth(2, e.target).children[1].style.display = "";
+                  }
+
+                  var currentState = e.target.classList[1];
+
+                  if (currentState === "closed") {
+                      e.target.classList.remove("closed");
+                      e.target.classList.add("opened");
+                  } else {
+                      e.target.classList.remove("opened");
+                      e.target.classList.add("closed");
+                  }
+              });
+              treeChildContent.children[0].classList.add("closed");
+              content = document.querySelector("#childContent").content.cloneNode(true);
+              content.children[0].children[0].innerText = parseInt(childKey2) + 1;
+
+              // Node-3
+              var ulInner2 = document.createElement("ul");
+              var dataChildMeta = dataChild[childKey2];
+              for (var childKey3 in dataChildMeta) {
+                  var treeDataChild = document.querySelector("#treeTemplate").content.cloneNode(true).children[0];
+                  var treeDataContent = treeDataChild.children[0];
+
+                  treeDataContent.children[0].classList.add("leaf");
+
+                  var contents = document.createElement("span");
+                  contents.innerText = `${childKey3}: ${dataChildMeta[childKey3]}`;
+
+                  treeDataContent.appendChild(contents);
+                  ulInner2.appendChild(treeDataChild);
+                  ulInner2.style.display = "none";
+              }
+
+              treeChild.appendChild(ulInner2);
+          }
+
+          treeChildContent.appendChild(content);
+          ulInner.appendChild(treeChild);
+          ulInner.style.display = "none";
       }
 
-      treeChildContent.appendChild(content);
-      ulInner.appendChild(treeChild);
-      ulInner.style.display = "none";
-    }
+      tree.appendChild(ulInner);
+      console.log(tree);
 
-    tree.appendChild(ulInner);
-    console.log(tree);
-    document.querySelector("#display").appendChild(tree);
+      if (!prepend) document.querySelector("#display").appendChild(tree);
+      else document.querySelector("#display").insertBefore(tree, document.querySelector("#display>li"))
   }
 }
 
 // This function add new element if user signed
-function defaultAdmin(init=true) {
-  if (init) {
-    document.querySelector("#admin_login").remove();
-    
-    var dataDiv = document.createElement("div");
-    dataDiv.setAttribute("id", "data");
-
-    var hrDiv = document.createElement("hr");
-    hrDiv.setAttribute("id", "mid")
-
-    document.body.prepend(dataDiv);
-    document.body.prepend(hrDiv);
-    console.log("defaultAdmin")
-  }
-
+function defaultAdmin() {
+  document.querySelector("#admin_login").remove();
   if (!Boolean(getData("DATA"))) {
-    const response = read("/");
-    var dataList = {};
-    response.then((data) => {
-      for (var child in data) {      
-        dataList[child] = data[child];
-      }
-      storeData("data", JSON.stringify(dataList));
-      displayData(dataList);
-    })
+      const response = adminRead("/");
+      var dataList = {};
+      response.then((data) => {
+          for (var child in data) {
+              dataList[child] = data[child];
+          }
+          console.log("response")
+          console.log(data);
+          console.log("dataList")
+          console.log(dataList);
+          storeData("data", JSON.stringify(dataList));
+          displayData(dataList);
+      })
   } else {
-    var data = getData("DATA");
-    displayData(data);
+      var data = getData("DATA");
+      displayData(data);
   }
 
-  // TODO: Get data then fill data inside template.
-   // Get Array data from localStorage
+  if (!Boolean(getData("ID"))) generateID();
 
-  // First child (Transaction code)
-    // First inner child (Number)
-      // First inside inner child (Meta)
-  
-
-  /*var parent = document.createElement("div");
-  parent.setAttribute("id", "input");
-  document.body.prepend(parent);
-
-  var ID = document.createElement("h3");
-  ID.innerText = "Insert, Update & Delete Data";
-  parent.append(ID);
- 
-  createSelectEl(default_attrs[0], "dbOp", "Operation: ", parent);
-  createInputEl(default_attrs[1], "ID: ",true, parent);
-  for(var key in default_attrs[2]) {
-    createInputEl(default_attrs[2][key][0], default_attrs[2][key][1], default_attrs[2][key][2], parent);
-  }
-  for(var key in default_attrs[3]) {
-    createSelectEl(default_attrs[3][key][0], default_attrs[3][key][1], default_attrs[3][key][2], parent);
-  }
-
-  var btnParent = createDivEl("Btn", parent);
-  for (var key in default_attrs[4]) {
-    createBtnEl(default_attrs[4][key][0], default_attrs[4][key][1], default_attrs[4][key][2], btnParent);
-  }
-
-  var alphaNumeric_ID = getData("ID");
-  if (alphaNumeric_ID) {
-    document.querySelector("#div-shoesID>#shoesID").value = alphaNumeric_ID;
-    
-    var unPostData = getData(alphaNumeric_ID);
-    if (unPostData) {
-      alert("Waiting to post data to database!")
-      
-      document.querySelector("#div-shoesNo>#shoesNo").value = unPostData.length+1;
-
-      var btn = document.querySelector("#div-Btn").children;
-      btn.insertBtn.disabled = false;
-      btn.cancelBtn.disabled = false;
-    }
-  } else {
-    storeData("ID", JSON.stringify(randomID()));
-    document.querySelector("#div-shoesID>#shoesID").value = getData("id");
-  }
+  inputHandler();
 }
 
-function updateAdmin() {
-  var selectState = document.querySelector("#dbOp").selectedIndex;
-
-  // Remove div with ID #input
-  document.querySelector("#input").remove(); 
-
-  defaultAdmin(false);
-  document.querySelector("#dbOp").getElementsByTagName("option")[selectState].selected = "selected";
-
-  document.querySelector("#div-shoesID>#shoesID").value = "";
-
-  document.querySelector("#div-shoesNo").remove();
-  document.querySelector("#div-Btn").remove();
-
-  document.querySelector("#shoesID").disabled = false;
-  document.querySelector("#shoesBrand").disabled = true;
-  document.querySelector("#shoesSize").disabled = true;
-  document.querySelector("#div-shoesService>#shoesService").disabled = true;
-  document.querySelector("#div-shoesStatus>#shoesStatus").disabled = true;
-  
-  var parent = document.querySelector("#input");
-  const beforeEl = document.querySelector("#div-shoesBrand");
-
-  createSelectEl(
-   update_attrs[0], "shoesNo", "No: ", 
-    parent, false, insertBefore, beforeEl, true
-  )
-
-  createCheckEl(update_attrs[1], "Update Current Status To All", true, parent)
-  var btnParent = createDivEl("Btn", parent);
-  for (var key in update_attrs[2]) {
-    createBtnEl(update_attrs[2][key][0], update_attrs[2][key][1], update_attrs[2][key][2], btnParent);
-  }
-}
-
-function deleteAdmin() {
-  var selectState = document.querySelector("#dbOp").selectedIndex;
-  document.querySelector("#input").remove();
-
-  defaultAdmin(false);
-  document.querySelector("#dbOp").getElementsByTagName("option")[selectState].selected = "selected";
-
-  document.querySelector("#div-shoesID>#shoesID").value = ""
-
-  document.querySelector("#div-Btn").remove();
-  document.querySelector("#div-shoesService").remove();
-  document.querySelector("#div-shoesStatus").remove();
-  document.querySelector("#div-shoesNo").remove();
-
-  document.querySelector("#shoesID").disabled = false;
-  document.querySelector("#shoesBrand").disabled = true;
-  document.querySelector("#shoesSize").disabled = true;
-
-  var parent = document.querySelector("#input");
-
-  for (var key in delete_attrs[2]) {
-    createInputEl(delete_attrs[2][key][0], delete_attrs[2][key][1], delete_attrs[2][key][2], parent);
-  }
-
-  const beforeEl = document.querySelector("#div-shoesBrand");
-
-  createSelectEl(
-    delete_attrs[0], "shoesNo", "No: ", 
-    parent, false, insertBefore, beforeEl, true
-  )
-  createCheckEl(delete_attrs[1], "Delete Current Transaction ID", true, parent)
-
-  var btnParent = createDivEl("Btn", parent);
-  for (var key in delete_attrs[3]) {
-    createBtnEl(delete_attrs[3][key][0], delete_attrs[3][key][1], delete_attrs[3][key][2], btnParent);
-  }*/
-}
-
-export { 
-  defaultAdmin
-  //initOperationListener,
-  //initBtnListener_Insert
+export {
+  defaultAdmin,
+  displayData
 }

@@ -1,6 +1,8 @@
 import firebase from "firebase/app";
 import "firebase/database";
-import { storeData, removeData } from "./local_database"
+import { displayData } from "../admin/admin";
+import { storeData, removeData, getData } from "./local_database"
+
 console.log("test");
 firebase.initializeApp({
     apiKey: "AIzaSyA4-PsDCaElqrk9i6CYpTglUtW5m6-7cVA",
@@ -15,10 +17,27 @@ firebase.initializeApp({
 
 // User
 function read(id, eventType="value") {
-    var data =  firebase.database().ref(id.toUpperCase()).once(eventType).then((dataSnapshot) => {
-        console.log("Request read DB")
+    var data =  firebase.database().ref(id.toUpperCase()).orderByChild("timestampIn").once(eventType).then((dataSnapshot) => {
+        if (dataSnapshot.exists()) return dataSnapshot.val();
+        else return false;
+    }).catch((e) => { console.log(e); });
+
+    return data;
+}
+
+/** 
+ * Admin only 
+ */
+ function adminRead(id) {
+    var data =  firebase.database().ref(id.toUpperCase()).orderByChild("timestampIn").once("value").then((dataSnapshot) => {
+        
         if (dataSnapshot.exists()) {
-            return dataSnapshot.val();
+            var data = {}
+            dataSnapshot.forEach((child) => {
+                data[child.key] = child.val();
+            })
+
+            return data;
         } else {
             return false;
         }
@@ -29,13 +48,10 @@ function read(id, eventType="value") {
     return data;
 }
 
-/** 
- * Admin only 
- */
 function insert(id, data) {
     
     firebase.database().ref(id.toUpperCase()).set(data).then(() => {
-        console.log("Success");
+        console.log("Success write");
     }).catch(() => {
         console.log("Something wrong!");
     });
@@ -51,7 +67,14 @@ function remove(id) {
 
 function init_listner() {
     firebase.database().ref("/").on('child_changed', (childSnapshot) => {
-        storeData(childSnapshot.key, JSON.stringify(childSnapshot.val()));
+        var data = getData("DATA");
+        data[childSnapshot.key] = childSnapshot.val();
+        console.log(data);
+        console.log(childSnapshot.val());
+        storeData("DATA", JSON.stringify(data));
+        data = {};
+        data[childSnapshot.key] = childSnapshot.val();
+        displayData(data);
     });
 
     firebase.database().ref("/").on('child_removed', (childSnapshot) => {
@@ -62,4 +85,4 @@ function init_listner() {
 var db = firebase.database();
 var ServerValue = firebase.database.ServerValue
 
-export {read, update, insert, remove, db, ServerValue, init_listner};
+export {read, adminRead, update, insert, remove, db, ServerValue, init_listner};

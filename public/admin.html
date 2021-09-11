@@ -28,18 +28,22 @@
        </div>
     </div>
     <div>
-       <ul id=display></ul>
+      <span style="display: inline-flex;align-content: center;align-items: center;">
+         <h2 style="display: inline;padding: 0;text-decoration: underline;margin: 0;margin-right: 10px;">Data Transaksi</h2>
+         <button id=insertBtn>Insert Data</button>
+      </span>
+      <ul id=display></ul>
     </div>
     <div class="popup-container" style=display:none>
       <div class=popup-table>
          <div class=popup-table-cell>
             <div class=popup>
-               <div class=popuptitle style=font-weight:700>Insert Data</div>
+               <div class=popuptitle style=font-weight:700></div>
                <div class=content>
                   
                </div>
                <div class=popup-buttons>
-                  <div class=popup-button id=save style=color:#009688>INSERT</div>
+                  <div class=popup-button id=insertupdate style=color:#009688></div>
                   <div class=popup-button id=cancel style=color:#960000>CANCEL</div>
                </div>
             </div>
@@ -65,40 +69,41 @@
       </span>
    </template>
    <template id=insertUpdateTemplate>
-      <table id="input">
-         <tbody>
-           <tr id="div-shoesID">
-             <td for="shoesID">ID</td>
-             <td><input id="shoesID" type="text" autocomplete="off" maxlength="3" disabled="" style=width:100%></td>
-           </tr>
-           <tr id="div-shoesNo">
-             <td for="shoesNo">No</td>
-             <td><input id="shoesNo" type="text" autocomplete="off" value="1" disabled="" style=width:100%></td>
-           </tr>
-           <tr id="div-shoesBrand">
-             <td>Shoes Brand</td>
-             <td><input id="shoesBrand" type="text" autocomplete="off" style=width:100%></trd>
-           </tr>
-           <tr id="div-shoesSize">
-             <td>Shoes Size</td>
-             <td><input id="shoesSize" type="text" autocomplete="off" pattern="\d*" maxlength="3" style=width:100%></td>
-           </tr>
-           <tr id="div-shoesService">
-             <td>Service</td>
-             <td><select id="shoesService" style=width:100%><option value="Deep Clean">Deep Clean</option><option value="Fast Clean">Fast clean</option><option value="Whitening Treatment">Whitening Treatment</option><option value="Repaint">Repaint</option><option value="Reglue">Reglue</option></select></td>
-           </tr>
-           <tr id="div-shoesStatus">
-             <td>Status</td>
-             <td><select id="shoesStatus" style=width:100%><option value="In Progress">In Progress</option><option value="Done">Done</option><option value="Canceled">Canceled</option></select></td>
-           </tr>
-         </tbody>
-      </table>
-      <div style=display:flex;justify-content:space-between;margin-top:10px;>
-         <button>BACK</button>
-         <button id="addBtn" class="plus-button plus-button--small" disabled=""></button>
-         <button>NEXT</button>
-      </div>   
-   
+      <div id=insertUpdate>
+         <table id="input">
+            <tbody>
+              <tr id="shoesID">
+                <td for="shoesID">ID</td>
+                <td><input id="shoesID" type="text" autocomplete="off" maxlength="3" disabled="" style=width:100%></td>
+              </tr>
+              <tr id="shoesNo">
+                <td for="shoesNo">No</td>
+                <td><input id="shoesNo" type="text" autocomplete="off" value="1" disabled="" style=width:100%></td>
+              </tr>
+              <tr id="shoesBrand">
+                <td>Shoes Brand</td>
+                <td><input id="shoesBrand" type="text" autocomplete="off" style=width:100%></trd>
+              </tr>
+              <tr id="shoesSize">
+                <td>Shoes Size</td>
+                <td><input id="shoesSize" type="text" autocomplete="off" style=width:100%></td>
+              </tr>
+              <tr id="shoesService">
+                <td>Service</td>
+                <td><select id="shoesService" style=width:100%><option value="Deep Clean">Deep Clean</option><option value="Fast Clean">Fast clean</option><option value="Whitening Treatment">Whitening Treatment</option><option value="Repaint">Repaint</option><option value="Reglue">Reglue</option></select></td>
+              </tr>
+              <tr id="shoesStatus">
+                <td>Status</td>
+                <td><select id="shoesStatus" style=width:100%><option value="In Progress">In Progress</option><option value="Done">Done</option><option value="Canceled">Canceled</option></select></td>
+              </tr>
+            </tbody>
+         </table>
+         <div style=display:flex;justify-content:space-between;margin-top:10px;>
+            <button disabled>BACK</button>
+            <button id="addBtn" class="plus-button plus-button--small"></button>
+            <button disabled>NEXT</button>
+         </div>   
+      </div>
    </template>   
    <template id="deleteTemplate">
       <table class="rwd-table">
@@ -111,5 +116,6 @@
    <script src="script/642.js"></script>
    <script src="script/database.js"></script>
    <script src="script/397.js"></script>
+   <script src="script/641.js"></script>
    <script src="script/login.js"></script>
 </html>

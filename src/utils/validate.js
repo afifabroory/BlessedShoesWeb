@@ -1,7 +1,7 @@
 import { getData } from "../database/local_database"
 
 function is_intOnly(data) {
-    return /^[0-9]*$/.test(data);
+    return /^[0-9]+$/.test(data);
 }
 
 function is_alpnum(data) {
