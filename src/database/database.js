@@ -30,11 +30,12 @@ function read(id, eventType="value") {
  */
  function adminRead(id) {
     var data =  firebase.database().ref(id.toUpperCase()).orderByChild("timestampIn").once("value").then((dataSnapshot) => {
-        
         if (dataSnapshot.exists()) {
             var data = {}
             dataSnapshot.forEach((child) => {
-                data[child.key] = child.val();
+                if (child.val()["timestampOut"] === 0) {
+                    data[child.key] = child.val();
+                }
             })
 
             return data;
@@ -46,6 +47,14 @@ function read(id, eventType="value") {
     });
 
     return data;
+}
+
+function itExists(id) {
+    console.log(`Calling itExists function in datbaase.js to verify ID ${id}`)
+    return firebase.database().ref(id.toUpperCase()).once("value").then((dataSnapshot) => {
+        console.log(dataSnapshot.exists())
+        return dataSnapshot.exists()
+    })
 }
 
 function insert(id, data) {
@@ -69,11 +78,12 @@ function init_listner() {
     firebase.database().ref("/").on('child_changed', (childSnapshot) => {
         var data = getData("DATA");
         data[childSnapshot.key] = childSnapshot.val();
-        console.log(data);
-        console.log(childSnapshot.val());
+        //console.log(data);
+        //console.log(childSnapshot.val());
         storeData("DATA", JSON.stringify(data));
-        data = {};
-        data[childSnapshot.key] = childSnapshot.val();
+        console.log("from child_changged listener")
+        var listContent = document.querySelectorAll("#display>li");
+        listContent.forEach(e => e.remove());
         displayData(data);
     });
 
@@ -85,4 +95,4 @@ function init_listner() {
 var db = firebase.database();
 var ServerValue = firebase.database.ServerValue
 
-export {read, adminRead, update, insert, remove, db, ServerValue, init_listner};
+export {read, adminRead, update, insert, remove, itExists, db, ServerValue, init_listner};

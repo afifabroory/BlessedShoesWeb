@@ -181,6 +181,8 @@ function inputHandling() {
                         if (idx === "timestampIn") {
                             var dates = new Date(data[idx]);
                             document.querySelector("#tanggalTransaksi").innerText = `${dates.toLocaleDateString('id',{ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+                        } else if(idx === "timestampOut") {
+                            isInProgress = data[idx] === 0
                         } else {
                             var template = document.querySelector("#detailTable").content.cloneNode(true).children;
                             var tr = document.createElement("tr");
@@ -196,7 +198,9 @@ function inputHandling() {
                             template.ukuran.innerText = data[idx].Size;
                             tr.append(template.ukuran);
     
+                            // Update this one!
                             import("../admin/admin_const").then(utils => {
+                                console.log(data[idx].Status)
                                 if (utils.status_option_index[data[idx].Status] === 0)  isInProgress = true;
                             })
                             document.querySelector(".rwd-table>tbody").append(tr);

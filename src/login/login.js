@@ -14,13 +14,14 @@ import {
 // } from "../utils/admin_data"
 
 import { init_listner } from "../database/database"
+import { getData } from '../database/local_database';
 
 function signInOut(email, password) {
   const auth = firebase.auth();
   if (auth.currentUser) {
     auth.signOut();
   } else {
-    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).then(() => {
       auth.signInWithEmailAndPassword(email, password).catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;

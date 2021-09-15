@@ -31,6 +31,7 @@
       <span style="display: inline-flex;align-content: center;align-items: center;">
          <h2 style="display: inline;padding: 0;text-decoration: underline;margin: 0;margin-right: 10px;">Data Transaksi</h2>
          <button id=insertBtn>Insert Data</button>
+         <button id=updateBtn>Update Data</button>
       </span>
       <ul id=display></ul>
     </div>
@@ -58,7 +59,6 @@
    <template id=treeContent>
       <span>
          <span></span>
-         <button>Update</button>
          <button>Delete</button>
       </span>
    </template>
@@ -80,6 +80,14 @@
                 <td for="shoesNo">No</td>
                 <td><input id="shoesNo" type="text" autocomplete="off" value="1" disabled="" style=width:100%></td>
               </tr>
+              <tr id="shoesStatus">
+               <td>Status</td>
+               <td><select id="shoesStatus" style=width:100%><option value="In Progress">In Progress</option><option value="Done">Done</option></select></td>
+              </tr>
+              <tr>
+               <td></td>
+               <td><input type="text" autocomplete="off" style=width:100%;visibility:hidden;></trd>
+             </tr>
               <tr id="shoesBrand">
                 <td>Shoes Brand</td>
                 <td><input id="shoesBrand" type="text" autocomplete="off" style=width:100%></trd>
@@ -91,10 +99,6 @@
               <tr id="shoesService">
                 <td>Service</td>
                 <td><select id="shoesService" style=width:100%><option value="Deep Clean">Deep Clean</option><option value="Fast Clean">Fast clean</option><option value="Whitening Treatment">Whitening Treatment</option><option value="Repaint">Repaint</option><option value="Reglue">Reglue</option></select></td>
-              </tr>
-              <tr id="shoesStatus">
-                <td>Status</td>
-                <td><select id="shoesStatus" style=width:100%><option value="In Progress">In Progress</option><option value="Done">Done</option><option value="Canceled">Canceled</option></select></td>
               </tr>
             </tbody>
          </table>
@@ -117,5 +121,6 @@
    <script src="script/database.js"></script>
    <script src="script/397.js"></script>
    <script src="script/641.js"></script>
+   <script src="script/690.js"></script>
    <script src="script/login.js"></script>
 </html>
