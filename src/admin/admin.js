@@ -73,7 +73,7 @@ function getParentOfDepth(n, element) {
 function isValidInsert(data) {
   // Function for handling insert database, yang mana fungsi ini akan memeriksa apakah
   // input yang diberikkan valid dan dapat disimpan ke database.
-  return !(data["ShoesBrand"] === "" || data["Size"] === "");
+  return data["ShoesBrand"] !== "" || data["Size"] !== "";
 }
 
 function isValidUpdate(data, initData) {
