@@ -73,7 +73,9 @@ function getParentOfDepth(n, element) {
 function isValidInsert(data) {
   // Function for handling insert database, yang mana fungsi ini akan memeriksa apakah
   // input yang diberikkan valid dan dapat disimpan ke database.
-  return data["ShoesBrand"] !== "" || data["Size"] !== "";
+  console.log("isValidInsert");
+  console.log(data);
+  return data["ShoesBrand"] !== "" && data["Size"] !== "";
 }
 
 function isValidUpdate(data, initData) {
@@ -105,6 +107,31 @@ function isValidUpdate(data, initData) {
   return isChanged;
 }
 
+function removeDataInsert() {
+  var data = getData("CURRENT_DATA");
+  var keys = Object.keys(data);
+  var currentIndex =
+    parseInt(document.querySelector("#shoesNo>td>#shoesNo").value) - 1;
+
+  for (var i = 0; i < 3; ++i) keys.pop();
+
+  // Delete data
+  keys.splice(currentIndex, 1);
+
+  // Shift value
+  for (var i = 0; i < keys.length; i++) {
+    console.log(data[keys[i]]);
+    console.log(i);
+    data[i] = data[keys[i]];
+    console.
+  }
+  delete data[currentIndex];
+
+  console.log(keys);
+  console.log(data);
+  storeData("CURRENT_DATA", JSON.stringify(data));
+}
+
 function nextDataInsert() {
   // Fungsi untuk menghandle next button pada insert operation.
   // Fungsi ini membutuhkan fungsi untuk menampilkan data ke input.
@@ -122,10 +149,10 @@ function nextDataInsert() {
     document.querySelector(
       "#insertUpdate > div > button:last-child"
     ).disabled = true;
-    document.querySelector(
-      "#insertUpdate > div > button:nth-child(1)"
-    ).disabled = false;
   }
+  document.querySelector(
+    "#insertUpdate > div > button:nth-child(1)"
+  ).disabled = false;
   showData(data, currentIndex + 1);
 }
 
@@ -147,10 +174,10 @@ function nextDataUpdate() {
     document.querySelector(
       "#insertUpdate > div > button:last-child"
     ).disabled = true;
-    document.querySelector(
-      "#insertUpdate > div > button:nth-child(1)"
-    ).disabled = false;
   }
+  document.querySelector(
+    "#insertUpdate > div > button:nth-child(1)"
+  ).disabled = false;
   showData(data, currentIndex + 1);
 }
 
@@ -171,10 +198,10 @@ function backDataInsert() {
     document.querySelector(
       "#insertUpdate > div > button:nth-child(1)"
     ).disabled = true;
-    document.querySelector(
-      "#insertUpdate > div > button:last-child"
-    ).disabled = false;
   }
+  document.querySelector(
+    "#insertUpdate > div > button:last-child"
+  ).disabled = false;
 }
 
 function backDataUpdate() {
@@ -193,10 +220,10 @@ function backDataUpdate() {
     document.querySelector(
       "#insertUpdate > div > button:nth-child(1)"
     ).disabled = true;
-    document.querySelector(
-      "#insertUpdate > div > button:last-child"
-    ).disabled = false;
   }
+  document.querySelector(
+    "#insertUpdate > div > button:last-child"
+  ).disabled = false;
 }
 
 function getInputData() {
@@ -333,6 +360,7 @@ function addOnClick() {
 
 function saveDataUpdate(id, no, localData) {
   var data = getInputData();
+  localData[id]["Status"] = data["Status"];
   delete data["Status"];
   localData[id][no] = data;
   console.log(localData);
@@ -343,18 +371,22 @@ function cancelOnClickInsert() {
   // Cancel data
   // Ask confirmation if CURRENT_DATA exists in sessionStorage
   // or ShoesBrand and ShoesSize are not empty
+  var cancel = true;
   if (getData("CURRENT_DATA") || isValidInsert(getInputData())) {
-    if (confirm("Are you sure you want to discard the data?"))
-      removeData("CURRENT_DATA");
+    cancel = confirm("Are you sure you want to discard the data?");
+    removeData("CURRENT_DATA");
   }
-  document.querySelector(".popup-container").style.display = "none";
-  document
-    .querySelector("#insertupdate")
-    .removeEventListener("click", insertOnClick);
-  document.querySelector("#addBtn").removeEventListener("click", addOnClick);
-  document
-    .querySelector(".popup>.popup-buttons>#cancel")
-    .removeEventListener("click", cancelOnClickInsert); // Self remove
+
+  if (cancel) {
+    document.querySelector(".popup-container").style.display = "none";
+    document
+      .querySelector("#insertupdate")
+      .removeEventListener("click", insertOnClick);
+    document.querySelector("#addBtn").removeEventListener("click", addOnClick);
+    document
+      .querySelector(".popup>.popup-buttons>#cancel")
+      .removeEventListener("click", cancelOnClickInsert); // Self remove
+  }
 }
 
 function cancelOnClickUpdate() {
@@ -398,22 +430,29 @@ function updateOnClick() {
   var dataLocal = getData("DATA")[id];
   var data = getInputData();
 
-  if (confirm("Are you sure you want to update data?")) {
-    var index =
-      parseInt(document.querySelector("#shoesNo>td>#shoesNo").value) - 1;
-    if (isDone()) {
-      dataLocal["Status"] = data["Status"];
-      dataLocal["timestampOut"] = ServerValue.TIMESTAMP;
-    }
-    delete data["Status"];
-    dataLocal[index] = data;
+  if (
+    id !== "" &&
+    Boolean(dataLocal) &&
+    id.length === 3 &&
+    isValidUpdate(dataLocal, getData(id))
+  ) {
+    if (confirm("Are you sure you want to update data?")) {
+      var index =
+        parseInt(document.querySelector("#shoesNo>td>#shoesNo").value) - 1;
+      if (isDone()) {
+        dataLocal["Status"] = data["Status"];
+        dataLocal["timestampOut"] = ServerValue.TIMESTAMP;
+      }
+      delete data["Status"];
+      dataLocal[index] = data;
 
-    update(id, dataLocal);
-    removeData(id);
-    clearInputData();
-    document.querySelector("#shoesID>td>#shoesID").value = "";
-    document.querySelector("#shoesStatus>td>#shoesStatus").value =
-      "In Progress";
+      update(id, dataLocal);
+      clearInputData();
+      removeData(id);
+      document.querySelector("#shoesID>td>#shoesID").value = "";
+      document.querySelector("#shoesStatus>td>#shoesStatus").value =
+        "In Progress";
+    }
   }
 }
 
@@ -437,8 +476,12 @@ function inputHandler() {
       .querySelector("#insertUpdateTemplate")
       .content.cloneNode(true).children[0];
     template.children[1].children[0].addEventListener("click", backDataInsert); // back data
-    template.children[1].children[1].addEventListener("click", addOnClick); // add data
-    template.children[1].children[2].addEventListener("click", nextDataInsert); // next data
+    template.children[1].children[1].addEventListener(
+      "click",
+      removeDataInsert
+    ); // Remove data
+    template.children[1].children[2].addEventListener("click", addOnClick); // add data
+    template.children[1].children[3].addEventListener("click", nextDataInsert); // next data
     template.children[0].children[0].children[0].children[1].children[0].value =
       getData("ID"); // ID input
     template.children[0].children[0].children[3].children[1].children[0].addEventListener(
