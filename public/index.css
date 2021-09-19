@@ -348,15 +348,15 @@ input[type=search] {
 
 #detailStatus {
 	background: 0 0;
-	color: #fff;
-	border: 2px solid #fff;
+	color: #001d82;
+	border: 2px solid #001d82;
 	font-size: medium;
 	margin-top: 10px;
 	padding: 4px 5px
 }
 
 #detailStatus:hover {
-	background: #3d70b1;
+	background: #00004D;
 	color: #fff
 }
 
