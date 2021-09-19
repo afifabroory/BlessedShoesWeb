@@ -109,27 +109,58 @@ function isValidUpdate(data, initData) {
 
 function removeDataInsert() {
   var data = getData("CURRENT_DATA");
-  var keys = Object.keys(data);
   var currentIndex =
     parseInt(document.querySelector("#shoesNo>td>#shoesNo").value) - 1;
 
-  for (var i = 0; i < 3; ++i) keys.pop();
+  if (data) {
+    var show = true;
+    if (data[currentIndex]) {
+      var keys = Object.keys(data);
 
-  // Delete data
-  keys.splice(currentIndex, 1);
+      for (var i = 0; i < 3; ++i) keys.pop();
+      var temp = keys.map((x) => x); // Copy keys
 
-  // Shift value
-  for (var i = 0; i < keys.length; i++) {
-    console.log(data[keys[i]]);
-    console.log(i);
-    data[i] = data[keys[i]];
-    console.
+      // Delete data
+      keys.splice(currentIndex, 1);
+
+      // Shift value
+      for (var i = 0; i < keys.length; i++) {
+        console.log(keys[i]);
+        data[i] = data[keys[i]];
+      }
+
+      if (currentIndex < temp.length - 1) delete data[temp.at(-1)];
+      else delete data[temp[currentIndex]];
+
+      storeData("CURRENT_DATA", JSON.stringify(data));
+
+      if (currentIndex === keys.length) currentIndex = currentIndex - 1;
+
+      if (keys.length === 1) {
+        document.querySelector(
+          "#insertUpdate>div>button:last-child"
+        ).disabled = true;
+        document.querySelector(
+          "#insertUpdate>div>button:nth-child(1)"
+        ).disabled = true;
+      }
+
+      if (keys.length === 0) {
+        clearInputData();
+        document.querySelector("#shoesStatus>td>#shoesStatus").value =
+          "In Progress";
+        removeData("CURRENT_DATA");
+        show = false;
+      }
+    } else {
+      currentIndex = currentIndex - 1;
+    }
+    if (show) showData(data, currentIndex);
+  } else {
+    clearInputData();
+    document.querySelector("#shoesStatus>td>#shoesStatus").value =
+      "In Progress";
   }
-  delete data[currentIndex];
-
-  console.log(keys);
-  console.log(data);
-  storeData("CURRENT_DATA", JSON.stringify(data));
 }
 
 function nextDataInsert() {
@@ -296,6 +327,8 @@ function insertOnClick() {
           } else if (valid) {
             dataLocal[dataLength] = data;
           }
+        } else {
+          dataLocal[index] = data;
         }
         var id = document.querySelector("#shoesID>td>#shoesID").value;
         insert(id, dataLocal);
@@ -374,10 +407,10 @@ function cancelOnClickInsert() {
   var cancel = true;
   if (getData("CURRENT_DATA") || isValidInsert(getInputData())) {
     cancel = confirm("Are you sure you want to discard the data?");
-    removeData("CURRENT_DATA");
   }
 
   if (cancel) {
+    removeData("CURRENT_DATA");
     document.querySelector(".popup-container").style.display = "none";
     document
       .querySelector("#insertupdate")
@@ -536,6 +569,7 @@ async function updateHandler() {
     var template = document
       .querySelector("#insertUpdateTemplate")
       .content.cloneNode(true).children[0];
+    template.children[1].children[1].remove();
     template.children[1].children[1].remove();
     //template.children[1].children[1].classList.remove("plus-button");
     //template.children[1].children[1].classList.remove("plus-button--small");

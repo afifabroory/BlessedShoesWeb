@@ -28,17 +28,17 @@ ul {
 }
 
 a {
-	color: #fff;
+	color: #000181;
 	text-decoration: none;
 	cursor: pointer
 }
 
 svg {
-	fill: #fff
+	fill: #000181
 }
 
 .input-message {
-	color: #fff;
+	color: #000181;
 	min-height: 57px;
 	word-break: break-word
 }
@@ -55,19 +55,18 @@ span {
 	text-transform: uppercase;
 	padding: 1px 10px;
 	text-align: center;
-	background: #71aadc;
+	background: #fff;
 	width: -webkit-max-content;
 	width: -moz-max-content;
 	width: max-content;
-	color: #fff;
+	color: #000181;
 	font-style: italic;
 	font-weight: 700;
-	text-shadow: 2px 2px 0 rgb(0 0 0 / 25%)
 }
 
 .instagram {
-	width: 60px;
-	height: 60px
+	width: 50px; /* 60px 60px apply when more than 1 button*/
+	height: 50px 
 }
 
 .whatsapp {
@@ -83,7 +82,7 @@ span {
 
 .header {
 	width: 100%;
-	padding: 20px 20px;
+	padding: 20px 25px;
 	padding-bottom: 0;
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -132,7 +131,8 @@ nav {
 	padding: 10px
 }
 
-ul {
+/* Apply only to navigation */
+nav > ul {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -141,15 +141,16 @@ ul {
 	align-items: center
 }
 
-li {
+nav > ul > li {
 	margin-left: 20px
 }
+
 
 .btn {
 	text-transform: uppercase;
 	font-weight: 700;
 	font-size: x-large;
-	color: #fff;
+	color: #000181;
 	padding: 5px;
 	margin: 0 5px
 }
@@ -160,7 +161,7 @@ li {
 }
 
 .btn:hover {
-	background: #3d70b1;
+	background:#00004D;
 	color: #fff
 }
 
@@ -181,14 +182,15 @@ p.input-message {
 	align-items: center;
 	-webkit-box-pack: center;
 	-ms-flex-pack: center;
-	justify-content: center
+	justify-content: center;
+	-ms-flex-wrap: wrap;
+	    flex-wrap: wrap;
 }
 
 #title {
-	color: #fff;
+	color: #000181;
 	font-size: 5rem;
 	text-transform: capitalize;
-	text-shadow: 4px 4px 0 rgba(0, 0, 0, .25)
 }
 
 #main-feature {
@@ -206,7 +208,7 @@ p.input-message {
 }
 
 #board {
-	border: 5px solid #fff;
+	border: 5px solid #000181;
 	margin-left: 40px;
 	padding: inherit;
 	width: 26rem;
@@ -230,11 +232,21 @@ p.input-message {
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
-	flex-wrap: wrap;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center
+	-ms-flex-wrap: wrap;
+	    flex-wrap: wrap;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center
 }
 
 #pagination,
@@ -245,7 +257,9 @@ p.input-message {
 	right: 0;
 	top: 77%;
 	z-index: 1;
-	justify-content: center
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center
 }
 
 .ig-content {
@@ -278,15 +292,14 @@ p.input-message {
 .ig-content a p {
 	font-size: small;
 	margin: 0 auto;
-	color: #fff;
+	color: #000181;
 	text-align: center;
 	font-weight: 700;
-	text-shadow: 2px 2px 0 rgb(0 0 0 / 25%)
 }
 
 .flex-form input[type=button] {
-	background: #206199;
-	border: 1px solid #206199;
+	background: #000181;
+	border: 1px solid #000181;
 	color: #fff;
 	padding: 0 30px;
 	cursor: pointer;
@@ -294,8 +307,8 @@ p.input-message {
 }
 
 .flex-form input[type=button]:hover {
-	background: #3d70b1;
-	border: 1px solid #3d70b1
+	background: #00004D;
+	border: 1px solid #00004D
 }
 
 .flex-form {
@@ -303,8 +316,8 @@ p.input-message {
 	display: -ms-flexbox;
 	display: flex;
 	width: 100%;
-	-webkit-box-shadow: 4px 8px 16px rgba(0, 0, 0, .3);
-	box-shadow: 4px 8px 16px rgba(0, 0, 0, .3)
+	-webkit-box-shadow: 0px 0px 16px 10px rgb(0 0 0 / 30%);
+	box-shadow: 0px 0px 16px 10px rgb(0 0 0 / 30%)
 }
 
 .flex-form>* {
@@ -367,9 +380,10 @@ input[type=search] {
 		width: 100px;
 		height: 100px
 	}
+	/* Apply this when more than 1 btn
 	.btn {
 		font-size: larger
-	}
+	}*/
 	#brush {
 		top: 11%
 	}
@@ -419,7 +433,9 @@ input[type=search] {
 		top: 9%
 	}
 	.statusResponse {
-		justify-content: flex-end
+		-webkit-box-pack: end;
+		    -ms-flex-pack: end;
+		        justify-content: flex-end
 	}
 	#statusContact {
 		margin: 8px 30px 23px 30px
@@ -459,7 +475,9 @@ input[type=search] {
 		top: 11%
 	}
 	.statusResponse {
-		justify-content: center
+		-webkit-box-pack: center;
+		    -ms-flex-pack: center;
+		        justify-content: center
 	}
 	#statusContact {
 		font-size: large
@@ -481,16 +499,16 @@ input[type=search] {
 		height: 22rem
 	}
 	.instagram {
-		width: 50px;
-		height: 50px
+		width: 45px; /* 50px 50px */
+		height: 45px
 	}
 	.whatsapp {
 		width: 50px;
 		height: 50px
 	}
-	.btn {
+	/*.btn { Apply this when more than 1 btn
 		font-size: large
-	}
+	}*/
 	#brush {
 		top: 13%
 	}
@@ -526,7 +544,9 @@ input[type=search] {
 		top: 12%
 	}
 	.statusResponse {
-		justify-content: flex-end
+		-webkit-box-pack: end;
+		    -ms-flex-pack: end;
+		        justify-content: flex-end
 	}
 	#statusContact {
 		margin: 8px 30px 25px 30px
@@ -555,12 +575,12 @@ input[type=search] {
 		height: 40px
 	}
 	.whatsapp {
-		width: 40px;
-		height: 40px
+		width: 45px; /* 40px 40px apply when more than 1 btn*/
+		height: 45px
 	}
-	.btn {
+	/*.btn { Apply this when more than 1 btn
 		font-size: medium
-	}
+	}*/
 }
 
 .detail>p {
@@ -568,8 +588,13 @@ input[type=search] {
 	margin-right: 29px;
 	margin-bottom: 0;
 	font-weight: 700;
+	display:-webkit-box;
+	display:-ms-flexbox;
 	display:flex;
-	flex-direction:column
+	-webkit-box-orient:vertical;
+	-webkit-box-direction:normal;
+	    -ms-flex-direction:column;
+	        flex-direction:column
 }
 
 .popup-container a,
@@ -608,6 +633,7 @@ input[type=search] {
 	bottom: 0;
 	right: 0;
 	-webkit-transition: opacity .1s linear;
+	-o-transition: opacity .1s linear;
 	transition: opacity .1s linear;
 	overflow-y: hidden
 }
@@ -626,25 +652,34 @@ input[type=search] {
 	width: 100%;
 	height: 100%;
 	-webkit-transition: -webkit-transform .3s ease;
-	transition: transform .3s ease
+	transition: -webkit-transform .3s ease;
+	-o-transition: transform .3s ease;
+	transition: transform .3s ease;
+	transition: transform .3s ease, -webkit-transform .3s ease
 }
 
 .popup-container.hide .popup-table {
 	opacity: 0;
 	pointer-events: none;
 	-webkit-transform: translateY(6px);
-	transform: translateY(6px)
+	-ms-transform: translateY(6px);
+	    transform: translateY(6px)
 }
 
 .popup-table-cell {
 	display: table-cell;
 	vertical-align: middle;
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
 	padding: 16px
 }
 
 .popup {
+	width: -webkit-fit-content;
+	width: -moz-fit-content;
 	width: fit-content;
+	height: -webkit-fit-content;
+	height: -moz-fit-content;
 	height: fit-content;
 	position: relative;
 	margin: auto;
@@ -653,10 +688,12 @@ input[type=search] {
 	overflow-y: auto;
 	background-color: #fafafa;
 	border-radius: 2px;
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
 	font-size: 100%;
 	color: #303030;
-	box-shadow: 0 10px 40px 4px rgba(0, 0, 0, .3)
+	-webkit-box-shadow: 0 10px 40px 4px rgba(0, 0, 0, .3);
+	        box-shadow: 0 10px 40px 4px rgba(0, 0, 0, .3)
 }
 
 .popup .popuptitle {
@@ -667,9 +704,11 @@ input[type=search] {
 	height: 48px;
 	min-width: 200px;
 	line-height: 48px;
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
 	padding: 0 12px;
 	-webkit-transition: background-color .1s linear;
+	-o-transition: background-color .1s linear;
 	transition: background-color .1s linear;
 	font-weight: 500;
 	font-size: 1.05em;
@@ -680,7 +719,6 @@ input[type=search] {
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
-	-khtml-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none
@@ -691,7 +729,8 @@ input[type=search] {
 	min-width: 200px;
 	height: 100%;
 	overflow: hidden;
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
 	padding: 12px;
 	-webkit-overflow-scrolling: touch
 }
@@ -701,7 +740,8 @@ input[type=search] {
 }
 
 .popup .text {
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
 	padding: 12px;
 	line-height: 1.5em
 }
@@ -712,7 +752,8 @@ input[type=search] {
 	width: 100%;
 	text-align: right;
 	font-weight: 500;
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
 	border-top: 1px solid #eaeaea;
 	background-color: #fafafa;
 	border-radius: 0 0 2px 2px
@@ -720,7 +761,8 @@ input[type=search] {
 
 .popup-container .button {
 	display: inline-block;
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
 	text-align: center;
 	min-width: 60px;
 	height: 48px;
@@ -730,11 +772,11 @@ input[type=search] {
 	cursor: pointer;
 	border-radius: 3px;
 	-webkit-transition: background-color .1s linear;
+	-o-transition: background-color .1s linear;
 	transition: background-color .1s linear;
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
-	-khtml-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none
@@ -810,7 +852,11 @@ input[type=search] {
 
 @media (max-width:480px) {
 	.popup {
+		height: -webkit-fit-content;
+		height: -moz-fit-content;
 		height: fit-content;
+		width: -webkit-fit-content;
+		width: -moz-fit-content;
 		width: fit-content
 	}
 }
@@ -842,29 +888,61 @@ input[type=search] {
 	color: #000
 }
 
-@keyframes errorShake {
+@-webkit-keyframes errorShake {
 	10%,
 	90% {
-		transform: translate3d(-1px, 0, 0)
+		-webkit-transform: translate3d(-1px, 0, 0);
+		        transform: translate3d(-1px, 0, 0)
 	}
 	20%,
 	80% {
-		transform: translate3d(2px, 0, 0)
+		-webkit-transform: translate3d(2px, 0, 0);
+		        transform: translate3d(2px, 0, 0)
 	}
 	30%,
 	50%,
 	70% {
-		transform: translate3d(-4px, 0, 0)
+		-webkit-transform: translate3d(-4px, 0, 0);
+		        transform: translate3d(-4px, 0, 0)
 	}
 	40%,
 	60% {
-		transform: translate3d(4px, 0, 0)
+		-webkit-transform: translate3d(4px, 0, 0);
+		        transform: translate3d(4px, 0, 0)
+	}
+}
+
+@keyframes errorShake {
+	10%,
+	90% {
+		-webkit-transform: translate3d(-1px, 0, 0);
+		        transform: translate3d(-1px, 0, 0)
+	}
+	20%,
+	80% {
+		-webkit-transform: translate3d(2px, 0, 0);
+		        transform: translate3d(2px, 0, 0)
+	}
+	30%,
+	50%,
+	70% {
+		-webkit-transform: translate3d(-4px, 0, 0);
+		        transform: translate3d(-4px, 0, 0)
+	}
+	40%,
+	60% {
+		-webkit-transform: translate3d(4px, 0, 0);
+		        transform: translate3d(4px, 0, 0)
 	}
 }
 
 .input-error {
-	animation: errorShake .8s ease;
-	transform: translate3d(0, 0, 0);
-	backface-visibility: hidden;
-	perspective: 1000px
+	-webkit-animation: errorShake .8s ease;
+	        animation: errorShake .8s ease;
+	-webkit-transform: translate3d(0, 0, 0);
+	        transform: translate3d(0, 0, 0);
+	-webkit-backface-visibility: hidden;
+	        backface-visibility: hidden;
+	-webkit-perspective: 1000px;
+	        perspective: 1000px
 }

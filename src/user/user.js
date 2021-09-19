@@ -298,4 +298,11 @@ window.addEventListener("load", () => {
   document.querySelector(".preload-page").style.display = "none";
   document.querySelector(".container").style.display = "";
   displayIGMedia();
+
+  document.querySelector("#location").addEventListener("click", () => {
+    document.querySelector("#maps").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    })
+  })
 });
