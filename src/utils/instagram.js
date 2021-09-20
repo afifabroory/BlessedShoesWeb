@@ -1,5 +1,4 @@
 async function fetchAPI(url) {
-    console.log("[DEBUG]: fetchAPI()");
     const response = await fetch(url);
     return await response.json();
 }

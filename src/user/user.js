@@ -66,8 +66,6 @@ function displayMedia() {
   var imageURL = getData("_MEDIAURL");
   var mediaType = getData("_MEDIATYPE");
 
-  console.log(mediaType);
-
   /*if (mediaType === "CAROUSEL_ALBUM") {
         var dataArr = getData("_MEDIA");
         console.log("CAROUSEL")
@@ -221,7 +219,6 @@ function inputHandling() {
 
               // Update this one!
               import("../admin/admin_const").then((utils) => {
-                console.log(data[idx].Status);
                 if (utils.status_option_index[data[idx].Status] === 0)
                   isInProgress = true;
               });
@@ -294,7 +291,6 @@ document.querySelector("#inputID").addEventListener("input", (e) => {
 });
 
 window.addEventListener("load", () => {
-  console.log("DOM Loaded");
   document.querySelector(".preload-page").style.display = "none";
   document.querySelector(".container").style.display = "";
   displayIGMedia();
